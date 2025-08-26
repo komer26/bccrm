@@ -1,0 +1,7 @@
+Flask>=3.0,<4
+gunicorn>=21,<22
+requests>=2.31,<3
+
+
+
+

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Список участников — Турнир{% endblock %}
+{% block content %}
+  <div class="topbar">
+      <h1 class="headline">Список участников</h1>
+      <div class="muted">Всего: {{ participants|length }}</div>
+  </div>
+
+  {% if participants %}
+    <div class="grid-cards">
+      {% for p in participants %}
+        <div class="card">
+          {% set label = 'Участник' %}
+          {% if p.role == 'vtb' %}{% set label = 'Участник ВТБ' %}{% endif %}
+          {% if p.role == 'ic1' %}{% set label = 'Участник ИЦ-1' %}{% endif %}
+          {% if p.role == 'org' %}{% set label = 'Организатор' %}{% endif %}
+          <span class="badge">{{ label }}</span>
+          <img class="avatar" src="{{ p.photo_url }}" alt="{{ p.last_name }} {{ p.first_name }}">
+          <div class="name">{{ p.last_name }} {{ p.first_name }}</div>
+          <div class="meta">Зарегистрирован: {{ p.timestamp }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="muted">Пока нет зарегистрированных участников.</p>
+  {% endif %}
+{% endblock %}
+
+

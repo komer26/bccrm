@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Редактирование участника{% endblock %}
+{% block content %}
+  <h1 class="headline">Редактирование участника</h1>
+  <form class="form" action="{{ url_for('admin_edit_post', idx=idx) }}" method="post">
+    <label>
+      Фамилия
+      <input type="text" name="last_name" value="{{ row.last_name }}" required>
+    </label>
+    <label>
+      Имя
+      <input type="text" name="first_name" value="{{ row.first_name }}" required>
+    </label>
+    <label>
+      Роль участника
+      <select name="role">
+        {% set current = row.get('role', '') if row is mapping else row.role %}
+        <option value="" {{ 'selected' if current == '' else '' }}>Не указано</option>
+        <option value="vtb" {{ 'selected' if current == 'vtb' else '' }}>Участник ВТБ</option>
+        <option value="ic1" {{ 'selected' if current == 'ic1' else '' }}>Участник ИЦ-1</option>
+        <option value="org" {{ 'selected' if current == 'org' else '' }}>Организатор</option>
+      </select>
+    </label>
+    <div class="actions">
+      <button type="submit">Сохранить</button>
+      <a class="button secondary" href="{{ url_for('admin_index') }}">Отмена</a>
+    </div>
+  </form>
+{% endblock %}
+
+

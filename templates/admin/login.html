@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Вход в админку{% endblock %}
+{% block content %}
+  <h1 class="headline">Вход в админку</h1>
+  <form class="form" action="{{ url_for('admin_login_post') }}" method="post">
+    <label>
+      Пароль администратора
+      <input type="text" name="password" placeholder="Введите пароль" required>
+    </label>
+    <div class="actions">
+      <button type="submit">Войти</button>
+      <a class="button secondary" href="{{ url_for('register_form') }}">Назад</a>
+    </div>
+  </form>
+{% endblock %}
+
+

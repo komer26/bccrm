@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — Турнир по настольному теннису{% endblock %}
+{% block styles_extra %}
+  <style>
+    .hero {
+      display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      justify-items: center; text-align: center;
+    }
+    @media (min-width: 760px) {
+      .hero { grid-template-columns: 1fr; align-items: center; }
+    }
+    .brand-row { display:flex; gap:10px; align-items:center; flex-wrap: nowrap; margin-bottom: 8px; }
+    .brand-icon { height: 26px; width:auto; margin-right:6px; vertical-align:-4px; }
+    .brand-name { display:inline-flex; align-items:center; gap:6px; white-space: nowrap; }
+    .brand-header { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; font-size: 32px; font-weight: 900; line-height: 1.1; margin: 0 0 10px; text-align: center; flex-wrap: wrap; }
+    @media (min-width: 760px) {
+      .brand-header { font-size: 40px; }
+      .brand-header .brand-icon { height: 40px; }
+    }
+    .hero-title { font-size: 28px; font-weight: 800; margin: 4px 0 6px; }
+    .hero-meta { color: var(--muted); }
+    .hero-actions { display:flex; gap:10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+    .button.primary-strong { background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: 0 6px 18px rgba(37,99,235,0.35); }
+    .event-highlight {
+      display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 8px 0 6px;
+      background: linear-gradient(90deg, rgba(37,99,235,0.22), rgba(37,99,235,0.10));
+      border: 1px solid var(--border); border-radius: 12px; font-weight: 700; font-size: 16px;
+    }
+    .event-highlight .emoji { font-size: 18px; }
+    .hero-sub { color: var(--text); opacity: 0.9; font-weight: 600; margin-bottom: 4px; }
+    .form-grid { display:grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 560px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 960px) { .form-grid { grid-template-columns: 1fr 1fr; gap: 16px; } }
+    .form-actions { display:flex; gap:10px; align-items:center; flex-wrap: wrap; }
+    .countdown { display:flex; gap:10px; justify-content:center; margin-top: 6px; font-weight:800; }
+    .countdown .cell { background: rgba(15,23,42,0.7); border:1px solid var(--border); padding:8px 10px; border-radius:10px; min-width:56px; }
+    .countdown .num { font-size:20px; }
+    .countdown .label { font-size:11px; color: var(--muted); }
+  </style>
+{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div>
+      <h1 class="brand-header">
+        <span class="brand-name"><img class="brand-icon" src="{{ url_for('static', filename='img/vtblogo.svg') }}" alt="ПАО «ВТБ» логотип"> ПАО «ВТБ»</span>
+        <span class="muted">×</span>
+        <span class="brand-name"><img class="brand-icon" src="{{ url_for('static', filename='img/fsinlogo.svg') }}" alt="ФКУ ИЦ-1 УФСИН логотип"> ФКУ ИЦ‑1 УФСИН</span>
+      </h1>
+      <div class="hero-title">Товарищеский турнир по настольному теннису</div>
+      <a class="event-highlight" href="https://yandex.ru/maps/-/CLAUQ8jq" target="_blank" rel="noopener" title="Открыть на карте (Яндекс)">
+        <span class="emoji">🏓</span> 30 августа · 10:00 · спорткомплекс «Гармония»
+      </a>
+      <div class="countdown" id="countdown" aria-live="polite" data-start="{{ EVENT_START_ISO }}">
+        <div class="cell"><div class="num" id="cd-days">--</div><div class="label">дней</div></div>
+        <div class="cell"><div class="num" id="cd-hours">--</div><div class="label">часов</div></div>
+        <div class="cell"><div class="num" id="cd-mins">--</div><div class="label">мин</div></div>
+        <div class="cell"><div class="num" id="cd-secs">--</div><div class="label">сек</div></div>
+      </div>
+      <div class="hero-sub">Яркая битва ПАО «ВТБ» и ФКУ ИЦ‑1 УФСИН — приходите поддержать!</div>
+      <div class="hero-actions">
+        <a class="button primary-strong" href="#form">Зарегистрироваться</a>
+        <a class="button primary-strong" href="{{ url_for('participants_list') }}">Зарегистрированные участники</a>
+      </div>
+    </div>
+  </section>
+
+  <form id="form" class="form" action="{{ url_for('handle_register') }}" method="post" enctype="multipart/form-data">
+      <div class="form-grid">
+        <label>
+            Фамилия
+            <input type="text" name="last_name" placeholder="Иванов" required>
+        </label>
+        <label>
+            Имя
+            <input type="text" name="first_name" placeholder="Иван" required>
+        </label>
+      </div>
+      {% if SMS_VERIFICATION_ENABLED %}
+      <label>
+          Телефон для подтверждения
+          <input type="text" name="phone" placeholder="+7 900 000-00-00" required>
+      </label>
+      {% endif %}
+      <label>
+          Фото участника
+          <input type="file" name="photo" accept="image/*" required>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Отправить заявку</button>
+        <a class="button primary-strong" href="{{ url_for('participants_list') }}">Зарегистрированные участники</a>
+      </div>
+  </form>
+{% endblock %}
+{% block scripts_head %}{% endblock %}
+
+

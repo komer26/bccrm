@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Подтверждение телефона{% endblock %}
+{% block content %}
+  <h1 class="headline">Подтверждение телефона</h1>
+  <p class="lead">Мы отправили код на номер: <strong>{{ phone }}</strong>. Введите его ниже, чтобы завершить регистрацию.</p>
+  <form class="form" action="{{ url_for('verify_phone_post') }}" method="post">
+    <label>
+      Код из SMS
+      <input type="text" name="code" placeholder="6 цифр" required>
+    </label>
+    <div class="actions">
+      <button type="submit">Подтвердить</button>
+      <a class="button secondary" href="{{ url_for('register_form') }}">Назад</a>
+      <form action="{{ url_for('verify_phone_resend') }}" method="post" style="display:inline">
+        <button class="secondary" type="submit" {% if cooldown_left and cooldown_left>0 %}disabled title="Доступно через {{ cooldown_left }} сек."{% endif %}>Отправить код ещё раз{% if cooldown_left and cooldown_left>0 %} ({{ cooldown_left }}с){% endif %}</button>
+      </form>
+    </div>
+  </form>
+{% endblock %}
+
+
+

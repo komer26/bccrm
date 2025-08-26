@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Админка — Участники{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Администрирование: участники</h1>
+    <form action="{{ url_for('admin_logout') }}" method="post"><button class="secondary" type="submit">Выйти</button></form>
+  </div>
+
+  <form class="form" action="{{ url_for('admin_settings_sms') }}" method="post" style="margin-bottom:16px;">
+    <label>
+      Подтверждение по SMS
+      <select name="enabled">
+        {% set enabled = SMS_VERIFICATION_ENABLED %}
+        <option value="1" {{ 'selected' if enabled else '' }}>Включено</option>
+        <option value="0" {{ '' if enabled else 'selected' }}>Отключено</option>
+      </select>
+    </label>
+    <div class="actions"><button type="submit">Сохранить</button></div>
+  </form>
+
+  {% if rows %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Фото</th>
+          <th>Фамилия</th>
+          <th>Имя</th>
+          <th>Время</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ loop.index0 }}</td>
+          <td style="width:64px"><img class="avatar" style="width:64px" src="{{ url_for('static', filename='uploads/' ~ r.photo_filename) }}" alt=""></td>
+          <td>{{ r.last_name }}</td>
+          <td>{{ r.first_name }}</td>
+          <td class="muted">{{ r.timestamp }}</td>
+          <td>
+            <a class="button secondary" href="{{ url_for('admin_edit', idx=loop.index0) }}">Редактировать</a>
+            <form action="{{ url_for('admin_delete', idx=loop.index0) }}" method="post" style="display:inline" onsubmit="return confirm('Удалить участника?');">
+              <button class="danger" type="submit">Удалить</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">Список пуст.</p>
+  {% endif %}
+{% endblock %}
+
+

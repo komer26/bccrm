@@ -105,3 +105,8 @@ gunicorn.pid
 staticfiles/
 
 
+# Auto sync artifacts
+sync.log
+.git-sync.lock
+
+

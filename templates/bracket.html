@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Турнирная сетка{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Турнирная сетка</h1>
+    <div class="muted" id="br-info"></div>
+  </div>
+  <div id="bracket" class="form" style="overflow:auto"></div>
+{% endblock %}
+{% block scripts_head %}
+<script>
+(function(){
+  const apiData = async () => {
+    const r = await fetch('/api/bracket', {cache: 'no-store'});
+    return await r.json();
+  };
+  const el = document.getElementById('bracket');
+  const info = document.getElementById('br-info');
+  function playerHtml(p){
+    if(!p) return '<div class="muted">—</div>';
+    const img = p.photo_filename ? `<img class="avatar" style="width:40px;height:40px" src="${location.origin}/static/uploads/${p.photo_filename}" alt="">` : '';
+    return `<div style="display:flex;align-items:center;gap:8px">${img}<div>${p.name || ''}</div></div>`;
+  }
+  function render(br){
+    const rounds = br.rounds || [];
+    info.textContent = br.generated_at ? `Сгенерировано: ${br.generated_at}` : '';
+    if(!rounds.length){ el.innerHTML = '<p class="muted">Сетка не создана</p>'; return; }
+    let html = '<div style="display:flex; gap:14px; align-items:stretch">';
+    for(let r=0;r<rounds.length;r++){
+      const matches = rounds[r] || [];
+      html += '<div style="min-width:260px">';
+      html += `<div style="font-weight:800; margin-bottom:8px">Раунд ${r+1}</div>`;
+      for(let i=0;i<matches.length;i++){
+        const m = matches[i];
+        const winA = m.winner === 'a';
+        const winB = m.winner === 'b';
+        html += '<div class="card" style="margin-bottom:10px">';
+        html += `<div>${playerHtml(m.a)} <span style="float:right; font-weight:800">${m.score_a ?? 0}</span></div>`;
+        html += `<div>${playerHtml(m.b)} <span style="float:right; font-weight:800">${m.score_b ?? 0}</span></div>`;
+        if(winA||winB){
+          const w = winA ? (m.a && (m.a.name||'')) : (m.b && (m.b.name||''));
+          html += `<div class="muted" style="margin-top:6px">Победитель: <strong>${w||'—'}</strong></div>`;
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  }
+  let currentVersion = -1;
+  async function refresh(){
+    const br = await apiData();
+    render(br);
+  }
+  // initial
+  refresh();
+  try {
+    const es = new EventSource('/api/bracket/stream');
+    es.onmessage = (e) => {
+      try {
+        if(e.data === 'ping') return;
+        const data = JSON.parse(e.data);
+        if(typeof data.version === 'number' && data.version !== currentVersion){
+          currentVersion = data.version;
+          refresh();
+        }
+      } catch(_){}
+    };
+  } catch(_) {
+    // fallback: poll
+    setInterval(refresh, 5000);
+  }
+})();
+</script>
+{% endblock %}

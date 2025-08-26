@@ -5,6 +5,11 @@ from pathlib import Path
 import csv
 from datetime import datetime, timedelta
 import requests
+import json
+import random
+import time
+import queue
+from typing import Any, Dict, List, Optional, Tuple
 
 
 app = Flask(__name__)
@@ -16,6 +21,7 @@ UPLOAD_DIR = STATIC_DIR / "uploads"
 DATA_DIR = BASE_DIR / "data"
 CSV_PATH = DATA_DIR / "participants.csv"
 CONFIG_PATH = DATA_DIR / "config.json"
+BRACKET_PATH = DATA_DIR / "bracket.json"
 CSV_HEADERS = [
     "timestamp",
     "last_name",
@@ -42,6 +48,10 @@ SMSC_SENDER = os.environ.get("SMSC_SENDER", "")  # опционально, бу�
 VERIFY_CODE_TTL_SECONDS = int(os.environ.get("VERIFY_CODE_TTL_SECONDS", "600"))
 VERIFY_CODE_COOLDOWN_SECONDS = int(os.environ.get("VERIFY_CODE_COOLDOWN_SECONDS", "60"))
 VERIFY_MAX_ATTEMPTS = int(os.environ.get("VERIFY_MAX_ATTEMPTS", "5"))
+
+# Bracket live update infra
+BRACKET_VERSION = 0
+BRACKET_LISTENERS: List["queue.Queue[int]"] = []
 
 
 def _ensure_storage_ready() -> None:
@@ -157,6 +167,173 @@ def _seconds_since(iso_str: str) -> int:
 
 def _is_allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def _read_participants_snapshot() -> List[dict]:
+    rows = []
+    if CSV_PATH.exists():
+        with CSV_PATH.open("r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                rows.append(row)
+    return rows
+
+
+def _load_bracket() -> dict:
+    try:
+        with BRACKET_PATH.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {"rounds": [], "generated_at": None, "participants_snapshot_at": None}
+
+
+def _save_bracket(data: dict) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with BRACKET_PATH.open("w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def _ceil_power_of_two(n: int) -> int:
+    p = 1
+    while p < n:
+        p <<= 1
+    return p
+
+
+def _participant_display_name(row: dict) -> str:
+    return f"{row.get('last_name','').strip()} {row.get('first_name','').strip()}".strip()
+
+
+def _generate_bracket_from_participants(rows: List[dict]) -> dict:
+    # Build seed list with minimal info to prevent future mutation issues
+    seeds: List[dict] = []
+    for idx, r in enumerate(rows):
+        seeds.append({
+            "idx": idx,
+            "name": _participant_display_name(r),
+            "photo_filename": r.get("photo_filename", ""),
+            "role": r.get("role", ""),
+        })
+    random.shuffle(seeds)
+    total = len(seeds)
+    bracket_size = _ceil_power_of_two(max(1, total))
+    byes = bracket_size - total
+    # Add byes as None participants
+    for _ in range(byes):
+        seeds.append(None)
+
+    # First round matches
+    rounds: List[List[dict]] = []
+    first_round: List[dict] = []
+    for i in range(0, len(seeds), 2):
+        a = seeds[i]
+        b = seeds[i + 1] if i + 1 < len(seeds) else None
+        match = {
+            "round": 0,
+            "index": i // 2,
+            "a": a,
+            "b": b,
+            "score_a": 0,
+            "score_b": 0,
+            "winner": None,  # "a" | "b"
+        }
+        # Auto-advance if bye
+        if a is not None and b is None:
+            match["winner"] = "a"
+        elif a is None and b is not None:
+            match["winner"] = "b"
+        first_round.append(match)
+    rounds.append(first_round)
+
+    # Following rounds initially empty matches with placeholders
+    num_rounds = 0
+    size = bracket_size
+    while size > 1:
+        size //= 2
+        num_rounds += 1
+    # We already created round 0, need num_rounds-1 more
+    for r in range(1, num_rounds):
+        matches = []
+        for i in range(len(rounds[r - 1]) // 2):
+            matches.append({
+                "round": r,
+                "index": i,
+                "a": None,
+                "b": None,
+                "score_a": 0,
+                "score_b": 0,
+                "winner": None,
+            })
+        rounds.append(matches)
+
+    bracket = {
+        "rounds": rounds,
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "participants_snapshot_at": datetime.now().isoformat(timespec="seconds"),
+    }
+
+    # Propagate byes to fill next rounds
+    _recompute_propagation(bracket)
+    return bracket
+
+
+def _set_match_result(bracket: dict, round_idx: int, match_idx: int, score_a: Optional[int], score_b: Optional[int], winner: Optional[str]) -> None:
+    rounds = bracket.get("rounds", [])
+    if round_idx < 0 or round_idx >= len(rounds):
+        return
+    matches = rounds[round_idx]
+    if match_idx < 0 or match_idx >= len(matches):
+        return
+    m = matches[match_idx]
+    if score_a is not None:
+        m["score_a"] = max(0, int(score_a))
+    if score_b is not None:
+        m["score_b"] = max(0, int(score_b))
+    if winner in ("a", "b", None):
+        m["winner"] = winner
+    _recompute_propagation(bracket)
+
+
+def _recompute_propagation(bracket: dict) -> None:
+    rounds = bracket.get("rounds", [])
+    # Clear all next rounds contestants first
+    for r in range(1, len(rounds)):
+        for m in rounds[r]:
+            m["a"] = None
+            m["b"] = None
+            # Keep scores/winner as is, but they will be meaningless until filled
+    # Fill forward
+    for r in range(0, len(rounds) - 1):
+        for i, m in enumerate(rounds[r]):
+            next_round = rounds[r + 1]
+            target = next_round[i // 2]
+            winner_side = m.get("winner")
+            winner_player = None
+            if winner_side == "a":
+                winner_player = m.get("a")
+            elif winner_side == "b":
+                winner_player = m.get("b")
+            # If no explicit winner but one side is None (bye), auto-advance the non-empty
+            if winner_player is None and (m.get("a") is None) != (m.get("b") is None):
+                winner_player = m.get("a") if m.get("a") is not None else m.get("b")
+            if winner_player is not None:
+                if i % 2 == 0:
+                    target["a"] = winner_player
+                else:
+                    target["b"] = winner_player
+            # If no winner, leave target positions None
+
+
+def _broadcast_bracket_update() -> None:
+    global BRACKET_VERSION
+    BRACKET_VERSION += 1
+    # Snapshot listeners to avoid race on iteration
+    listeners = list(BRACKET_LISTENERS)
+    for q in listeners:
+        try:
+            q.put_nowait(BRACKET_VERSION)
+        except Exception:
+            pass
 
 
 @app.get("/")
@@ -548,6 +725,112 @@ def admin_delete(idx: int):
     _write_rows(rows)
     flash("Участник удалён")
     return redirect(url_for("admin_index"))
+
+
+@app.get("/api/bracket")
+def api_get_bracket():
+    bracket = _load_bracket()
+    return bracket
+
+
+@app.get("/api/bracket/version")
+def api_get_bracket_version():
+    return {"version": BRACKET_VERSION}
+
+
+@app.get("/api/bracket/stream")
+def api_bracket_stream():
+    def event_stream():
+        q: "queue.Queue[int]" = queue.Queue(maxsize=10)
+        BRACKET_LISTENERS.append(q)
+        # Send initial version immediately
+        try:
+            yield f"data: {{\"version\": {BRACKET_VERSION} }}\n\n"
+            last_ping = time.time()
+            while True:
+                try:
+                    ver = q.get(timeout=15)
+                    yield f"data: {{\"version\": {ver} }}\n\n"
+                except queue.Empty:
+                    # heartbeat
+                    now = time.time()
+                    if now - last_ping >= 15:
+                        yield "data: ping\n\n"
+                        last_ping = now
+        finally:
+            try:
+                BRACKET_LISTENERS.remove(q)
+            except ValueError:
+                pass
+    from flask import Response
+    return Response(event_stream(), headers={"Cache-Control": "no-cache"}, mimetype="text/event-stream")
+
+
+@app.get("/bracket")
+def public_bracket():
+    return render_template("bracket.html")
+
+
+@app.get("/admin/bracket")
+def admin_bracket():
+    if (resp := _require_admin()) is not None:
+        return resp
+    bracket = _load_bracket()
+    rows = _read_participants_snapshot()
+    return render_template("admin/bracket.html", bracket=bracket, rows=rows)
+
+
+@app.post("/admin/bracket/generate")
+def admin_bracket_generate():
+    if (resp := _require_admin()) is not None:
+        return resp
+    rows = _read_participants_snapshot()
+    if not rows:
+        flash("Нет участников для генерации сетки")
+        return redirect(url_for("admin_bracket"))
+    bracket = _generate_bracket_from_participants(rows)
+    _save_bracket(bracket)
+    _broadcast_bracket_update()
+    flash("Сетка турнира сгенерирована")
+    return redirect(url_for("admin_bracket"))
+
+
+@app.post("/admin/bracket/reset")
+def admin_bracket_reset():
+    if (resp := _require_admin()) is not None:
+        return resp
+    try:
+        BRACKET_PATH.unlink(missing_ok=True)  # type: ignore[arg-type]
+    except Exception:
+        pass
+    _broadcast_bracket_update()
+    flash("Сетка сброшена")
+    return redirect(url_for("admin_bracket"))
+
+
+@app.post("/admin/bracket/match/<int:round_idx>/<int:match_idx>/update")
+def admin_bracket_match_update(round_idx: int, match_idx: int):
+    if (resp := _require_admin()) is not None:
+        return resp
+    bracket = _load_bracket()
+    try:
+        score_a_raw = request.form.get("score_a")
+        score_b_raw = request.form.get("score_b")
+        score_a = int(score_a_raw) if score_a_raw is not None and score_a_raw != "" else None
+        score_b = int(score_b_raw) if score_b_raw is not None and score_b_raw != "" else None
+    except ValueError:
+        flash("Некорректный счёт")
+        return redirect(url_for("admin_bracket"))
+    winner = request.form.get("winner") or None
+    if winner not in ("a", "b", None):
+        winner = None
+    _set_match_result(bracket, round_idx, match_idx, score_a, score_b, winner)
+    _save_bracket(bracket)
+    _broadcast_bracket_update()
+    flash("Матч обновлён")
+    return redirect(url_for("admin_bracket"))
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "8448")), debug=True)
 

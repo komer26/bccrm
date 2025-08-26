@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Админка — Сетка{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Управление турнирной сеткой</h1>
+    <form action="{{ url_for('admin_logout') }}" method="post"><button class="secondary" type="submit">Выйти</button></form>
+  </div>
+
+  <div class="form" style="margin-bottom:16px; display:flex; gap:10px; flex-wrap:wrap">
+    <form action="{{ url_for('admin_bracket_generate') }}" method="post" onsubmit="return confirm('Сгенерировать новую сетку? Текущая будет перезаписана.')">
+      <button type="submit">Сгенерировать случайно из участников ({{ rows|length }})</button>
+    </form>
+    <form action="{{ url_for('admin_bracket_reset') }}" method="post" onsubmit="return confirm('Сбросить сетку?')">
+      <button class="danger" type="submit">Сбросить сетку</button>
+    </form>
+    <a class="button secondary" href="{{ url_for('public_bracket') }}" target="_blank" rel="noopener">Открыть публичную страницу</a>
+  </div>
+
+  {% set br = bracket %}
+  {% if not br.rounds %}
+    <p class="muted">Сетка не создана. Нажмите «Сгенерировать».</p>
+  {% else %}
+    <div style="display:flex; gap:14px; align-items:flex-start; overflow:auto">
+      {% for matches in br.rounds %}
+      <div style="min-width:300px">
+        <div style="font-weight:800; margin-bottom:8px">Раунд {{ loop.index }}</div>
+        {% for m in matches %}
+        <div class="card" style="margin-bottom:10px">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px">
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px">
+                {% if m.a and m.a.photo_filename %}
+                  <img class="avatar" style="width:32px;height:32px" src="{{ url_for('static', filename='uploads/' ~ m.a.photo_filename) }}" alt="">
+                {% endif %}
+                <div>{{ m.a.name if m.a else '—' }}</div>
+              </div>
+            </div>
+            <div>
+              <form action="{{ url_for('admin_bracket_match_update', round_idx=m.round, match_idx=m.index) }}" method="post" style="display:flex; gap:6px; align-items:center">
+                <input type="number" name="score_a" value="{{ m.score_a or 0 }}" min="0" style="width:64px">
+                <span class="muted">:</span>
+                <input type="number" name="score_b" value="{{ m.score_b or 0 }}" min="0" style="width:64px">
+                <select name="winner">
+                  <option value="" {{ 'selected' if not m.winner else '' }}>— победитель —</option>
+                  <option value="a" {{ 'selected' if m.winner == 'a' else '' }}>Победил верхний</option>
+                  <option value="b" {{ 'selected' if m.winner == 'b' else '' }}>Победил нижний</option>
+                </select>
+                <button type="submit">Сохранить</button>
+              </form>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px; margin-top:8px">
+            {% if m.b and m.b.photo_filename %}
+              <img class="avatar" style="width:32px;height:32px" src="{{ url_for('static', filename='uploads/' ~ m.b.photo_filename) }}" alt="">
+            {% endif %}
+            <div>{{ m.b.name if m.b else '—' }}</div>
+          </div>
+          {% if m.winner %}
+            <div class="muted" style="margin-top:6px">Победитель: <strong>{{ (m.a.name if m.winner=='a' and m.a) or (m.b.name if m.winner=='b' and m.b) or '—' }}</strong></div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

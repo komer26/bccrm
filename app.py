@@ -360,6 +360,32 @@ def participants_list():
     return render_template("list.html", participants=participants)
 
 
+@app.get("/organizers")
+def organizers_list():
+    _ensure_storage_ready()
+
+    organizers = []
+    if CSV_PATH.exists():
+        with CSV_PATH.open("r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                role_val = (row.get("role", "") or "").strip().lower()
+                if role_val != "org":
+                    continue
+                organizers.append({
+                    "timestamp": row.get("timestamp", ""),
+                    "last_name": row.get("last_name", ""),
+                    "first_name": row.get("first_name", ""),
+                    "photo_url": url_for("static", filename=f"uploads/{row.get('photo_filename', '')}"),
+                    "role": row.get("role", ""),
+                    "phone": row.get("phone", ""),
+                    "phone_verified_at": row.get("phone_verified_at", ""),
+                })
+
+    organizers.sort(key=lambda x: x["timestamp"])  # по времени создания
+    return render_template("organizers.html", organizers=organizers)
+
+
 @app.context_processor
 def inject_globals():
     # Вычисляем URL фонового видео: приоритет внешнему URL,

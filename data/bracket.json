@@ -202,7 +202,7 @@
           "winner_round": 0,
           "winner_match": 3
         },
-        "winner": 2
+        "winner": 1
       },
       {
         "id": "r2m3",
@@ -240,7 +240,7 @@
           "winner_round": 1,
           "winner_match": 1
         },
-        "winner": null
+        "winner": 2
       },
       {
         "id": "r3m2",
@@ -270,5 +270,5 @@
       }
     ]
   ],
-  "updated_at": "2025-08-27T07:17:53"
+  "updated_at": "2025-08-27T07:18:29"
 }

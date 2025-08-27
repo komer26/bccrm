@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Турнирная сетка{% endblock %}
+{% block styles_extra %}
+  <style>
+    .bracket { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+    .round { display: grid; align-content: start; gap: 12px; }
+    .match { background: rgba(15,23,42,0.7); border:1px solid var(--border); border-radius: 12px; padding: 10px; }
+    .slot { display:flex; gap:8px; align-items:center; padding:6px 8px; border-radius:8px; border:1px dashed var(--border); }
+    .slot.empty { opacity: .6; font-style: italic; }
+    .slot .avatar { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); object-fit: cover; }
+    .slot .name { font-weight:700; }
+    .winner { border-color: rgba(37,99,235,0.6); box-shadow: inset 0 0 0 1px rgba(37,99,235,0.3); }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Турнирная сетка</h1>
+    <div class="muted">Просмотр</div>
+  </div>
+
+  {% if not view %}
+    <p class="muted">Сетка ещё не создана. Обратитесь к администратору.</p>
+  {% else %}
+    <div class="bracket">
+      {% for rnd in view.rounds %}
+        <div class="round">
+          <div class="muted">Раунд {{ loop.index }}</div>
+          {% for m in rnd %}
+            <div class="match">
+              <div class="slot {{ 'winner' if m.winner==1 else '' }} {{ 'empty' if not m.p1 }}">
+                {% if m.p1 %}
+                  <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p1.photo_filename) }}" alt="">
+                  <div class="name">{{ m.p1.last_name }} {{ m.p1.first_name }}</div>
+                {% else %}
+                  <div class="name">—</div>
+                {% endif %}
+              </div>
+              <div class="slot {{ 'winner' if m.winner==2 else '' }} {{ 'empty' if not m.p2 }}" style="margin-top:6px;">
+                {% if m.p2 %}
+                  <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p2.photo_filename) }}" alt="">
+                  <div class="name">{{ m.p2.last_name }} {{ m.p2.first_name }}</div>
+                {% else %}
+                  <div class="name">—</div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+

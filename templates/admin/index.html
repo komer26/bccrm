@@ -3,6 +3,7 @@
 {% block content %}
   <div class="topbar">
     <h1 class="headline">Администрирование: участники</h1>
+    <a class="button secondary" href="{{ url_for('admin_bracket') }}">Сетка</a>
     <form action="{{ url_for('admin_logout') }}" method="post"><button class="secondary" type="submit">Выйти</button></form>
   </div>
 

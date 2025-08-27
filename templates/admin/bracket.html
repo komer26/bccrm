@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Админка — Сетка{% endblock %}
+{% block styles_extra %}
+  <style>
+    .bracket { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+    .round { display: grid; align-content: start; gap: 12px; }
+    .match { background: rgba(15,23,42,0.7); border:1px solid var(--border); border-radius: 12px; padding: 10px; }
+    .slot { display:flex; gap:8px; align-items:center; padding:6px 8px; border-radius:8px; border:1px dashed var(--border); }
+    .slot.empty { opacity: .6; font-style: italic; }
+    .slot .avatar { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); object-fit: cover; }
+    .slot .name { font-weight:700; }
+    .winner { border-color: rgba(37,99,235,0.6); box-shadow: inset 0 0 0 1px rgba(37,99,235,0.3); }
+    .controls { display:flex; gap:8px; margin-top:8px; }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Администрирование: турнирная сетка</h1>
+    <form action="{{ url_for('admin_logout') }}" method="post"><button class="secondary" type="submit">Выйти</button></form>
+  </div>
+
+  <div class="form" style="margin-bottom:12px;">
+    <div class="actions">
+      <form action="{{ url_for('admin_bracket_generate') }}" method="post" style="display:inline">
+        <button type="submit">Сгенерировать сетку</button>
+      </form>
+      <form action="{{ url_for('admin_bracket_reset') }}" method="post" style="display:inline" onsubmit="return confirm('Сбросить текущую сетку?');">
+        <button class="danger" type="submit">Сбросить сетку</button>
+      </form>
+      <a class="button secondary" href="{{ url_for('admin_index') }}">К участникам</a>
+    </div>
+    <div class="muted" style="margin-top:8px;">Участников: {{ participants|length }}</div>
+  </div>
+
+  {% if not view %}
+    <p class="muted">Сетка не создана. Нажмите «Сгенерировать сетку».</p>
+  {% else %}
+    <div class="bracket">
+      {% for rnd in view.rounds %}
+        <div class="round">
+          <div class="muted">Раунд {{ loop.index }}</div>
+          {% for m in rnd %}
+            <div class="match">
+              <div class="slot {{ 'winner' if m.winner==1 else '' }} {{ 'empty' if not m.p1 }}">
+                {% if m.p1 %}
+                  <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p1.photo_filename) }}" alt="">
+                  <div class="name">{{ m.p1.last_name }} {{ m.p1.first_name }}</div>
+                {% else %}
+                  <div class="name">—</div>
+                {% endif %}
+              </div>
+              <div class="slot {{ 'winner' if m.winner==2 else '' }} {{ 'empty' if not m.p2 }}" style="margin-top:6px;">
+                {% if m.p2 %}
+                  <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p2.photo_filename) }}" alt="">
+                  <div class="name">{{ m.p2.last_name }} {{ m.p2.first_name }}</div>
+                {% else %}
+                  <div class="name">—</div>
+                {% endif %}
+              </div>
+              <div class="controls">
+                <form action="{{ url_for('admin_bracket_winner') }}" method="post" style="display:inline">
+                  <input type="hidden" name="r" value="{{ m.r }}">
+                  <input type="hidden" name="m" value="{{ m.m }}">
+                  <input type="hidden" name="winner" value="1">
+                  <button type="submit" class="secondary" {% if not m.p1 %}disabled{% endif %}>Победил верхний</button>
+                </form>
+                <form action="{{ url_for('admin_bracket_winner') }}" method="post" style="display:inline">
+                  <input type="hidden" name="r" value="{{ m.r }}">
+                  <input type="hidden" name="m" value="{{ m.m }}">
+                  <input type="hidden" name="winner" value="2">
+                  <button type="submit" class="secondary" {% if not m.p2 %}disabled{% endif %}>Победил нижний</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+

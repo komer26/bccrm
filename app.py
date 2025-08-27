@@ -16,6 +16,7 @@ UPLOAD_DIR = STATIC_DIR / "uploads"
 DATA_DIR = BASE_DIR / "data"
 CSV_PATH = DATA_DIR / "participants.csv"
 CONFIG_PATH = DATA_DIR / "config.json"
+BRACKET_PATH = DATA_DIR / "bracket.json"
 CSV_HEADERS = [
     "timestamp",
     "last_name",
@@ -451,6 +452,227 @@ def _require_admin():
         flash("Требуется вход в админку.")
         return redirect(url_for("admin_login"))
     return None
+
+
+# --------- Блок: Турнирная сетка ---------
+def _read_bracket():
+    try:
+        import json
+        with BRACKET_PATH.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+    except Exception:
+        return None
+
+
+def _write_bracket(data: dict) -> None:
+    import json
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with BRACKET_PATH.open("w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def _participants_for_bracket():
+    participants = []
+    if CSV_PATH.exists():
+        with CSV_PATH.open("r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for idx, row in enumerate(reader):
+                participants.append({
+                    "id": idx,
+                    "last_name": row.get("last_name", ""),
+                    "first_name": row.get("first_name", ""),
+                    "photo_filename": row.get("photo_filename", ""),
+                    "name": f"{row.get('last_name','')} {row.get('first_name','')}".strip(),
+                })
+    return participants
+
+
+def _build_bracket_from_participants(participants: list[dict]) -> dict:
+    import math
+    import random
+    seeds = list(range(len(participants)))
+    random.shuffle(seeds)
+    # до ближайшей степени двойки
+    def next_pow2(x: int) -> int:
+        if x <= 1:
+            return 1
+        return 1 << (x - 1).bit_length()
+    size = next_pow2(len(seeds))
+    # добавим None как BYE
+    while len(seeds) < size:
+        seeds.append(None)
+
+    # Первый раунд: попарно
+    rounds: list[list[dict]] = []
+    first_round: list[dict] = []
+    for i in range(0, size, 2):
+        s1 = seeds[i]
+        s2 = seeds[i + 1] if i + 1 < size else None
+        first_round.append({
+            "id": f"r1m{(i//2)+1}",
+            "p1_from": {"seed": s1} if s1 is not None else None,
+            "p2_from": {"seed": s2} if s2 is not None else None,
+            "winner": None,
+        })
+    rounds.append(first_round)
+
+    # Последующие раунды: победители предыдущего
+    current_size = len(first_round)
+    round_index = 2
+    while current_size > 1:
+        prev_round_idx = round_index - 2  # индекс предыдущего в массиве
+        new_round: list[dict] = []
+        for i in range(0, current_size, 2):
+            m1 = i
+            m2 = i + 1
+            new_round.append({
+                "id": f"r{round_index}m{(i//2)+1}",
+                "p1_from": {"winner_round": prev_round_idx, "winner_match": m1},
+                "p2_from": {"winner_round": prev_round_idx, "winner_match": m2},
+                "winner": None,
+            })
+        rounds.append(new_round)
+        current_size = len(new_round)
+        round_index += 1
+
+    return {
+        "generated_at": _now_iso(),
+        "participants": participants,
+        "rounds": rounds,
+    }
+
+
+def _resolve_slot(bracket: dict, slot: dict | None):
+    if slot is None:
+        return None
+    # из посева
+    if "seed" in slot:
+        seed = slot["seed"]
+        if seed is None:
+            return None
+        parts = bracket.get("participants", [])
+        if 0 <= seed < len(parts):
+            return parts[seed]
+        return None
+    # из победителя другого матча
+    if "winner_round" in slot and "winner_match" in slot:
+        r = slot["winner_round"]
+        m = slot["winner_match"]
+        try:
+            match = bracket["rounds"][r][m]
+        except Exception:
+            return None
+        w = match.get("winner")
+        if w == 1:
+            return _resolve_slot(bracket, match.get("p1_from"))
+        if w == 2:
+            return _resolve_slot(bracket, match.get("p2_from"))
+        return None
+    return None
+
+
+def _bracket_viewmodel(bracket: dict) -> dict:
+    rounds_vm: list[list[dict]] = []
+    for r_index, rnd in enumerate(bracket.get("rounds", [])):
+        row: list[dict] = []
+        for m_index, match in enumerate(rnd):
+            p1 = _resolve_slot(bracket, match.get("p1_from"))
+            p2 = _resolve_slot(bracket, match.get("p2_from"))
+            row.append({
+                "id": match.get("id"),
+                "r": r_index,
+                "m": m_index,
+                "p1": p1,
+                "p2": p2,
+                "winner": match.get("winner"),
+            })
+        rounds_vm.append(row)
+    return {"rounds": rounds_vm, "participants": bracket.get("participants", [])}
+
+
+@app.get("/bracket")
+def public_bracket():
+    _ensure_storage_ready()
+    bracket = _read_bracket()
+    if not bracket:
+        flash("Сетка пока не создана. Обратитесь к администратору.")
+        return render_template("bracket.html", view=None)
+    view = _bracket_viewmodel(bracket)
+    return render_template("bracket.html", view=view)
+
+
+@app.get("/admin/bracket")
+def admin_bracket():
+    if (resp := _require_admin()) is not None:
+        return resp
+    bracket = _read_bracket()
+    parts = _participants_for_bracket()
+    view = _bracket_viewmodel(bracket) if bracket else None
+    return render_template("admin/bracket.html", view=view, participants=parts)
+
+
+@app.post("/admin/bracket/generate")
+def admin_bracket_generate():
+    if (resp := _require_admin()) is not None:
+        return resp
+    parts = _participants_for_bracket()
+    if len(parts) < 2:
+        flash("Недостаточно участников для генерации сетки (нужно минимум 2).")
+        return redirect(url_for("admin_bracket"))
+    bracket = _build_bracket_from_participants(parts)
+    _write_bracket(bracket)
+    flash("Сетка создана.")
+    return redirect(url_for("admin_bracket"))
+
+
+@app.post("/admin/bracket/reset")
+def admin_bracket_reset():
+    if (resp := _require_admin()) is not None:
+        return resp
+    try:
+        BRACKET_PATH.unlink(missing_ok=True)  # type: ignore[arg-type]
+    except Exception:
+        pass
+    flash("Сетка сброшена.")
+    return redirect(url_for("admin_bracket"))
+
+
+@app.post("/admin/bracket/winner")
+def admin_bracket_winner():
+    if (resp := _require_admin()) is not None:
+        return resp
+    bracket = _read_bracket()
+    if not bracket:
+        flash("Сетка не найдена.")
+        return redirect(url_for("admin_bracket"))
+    try:
+        r = int(request.form.get("r", ""))
+        m = int(request.form.get("m", ""))
+        w = int(request.form.get("winner", ""))
+        assert w in (1, 2)
+    except Exception:
+        flash("Некорректные данные.")
+        return redirect(url_for("admin_bracket"))
+    try:
+        match = bracket["rounds"][r][m]
+    except Exception:
+        flash("Матч не найден.")
+        return redirect(url_for("admin_bracket"))
+    # Проверим, что есть такой слот
+    p1 = _resolve_slot(bracket, match.get("p1_from"))
+    p2 = _resolve_slot(bracket, match.get("p2_from"))
+    if w == 1 and not p1:
+        flash("Нельзя выбрать победителем пустой слот.")
+        return redirect(url_for("admin_bracket"))
+    if w == 2 and not p2:
+        flash("Нельзя выбрать победителем пустой слот.")
+        return redirect(url_for("admin_bracket"))
+    match["winner"] = w
+    _write_bracket(bracket)
+    flash("Результат матча сохранён.")
+    return redirect(url_for("admin_bracket"))
 
 
 @app.post("/admin/settings/sms")

@@ -496,7 +496,7 @@ def _participants_for_bracket():
     return participants
 
 
-def _build_bracket_from_participants(participants: list[dict]) -> dict:
+def _build_bracket_from_participants(participants: list[dict], tables: int = 1) -> dict:
     import math
     import random
     seeds = list(range(len(participants)))
@@ -544,10 +544,20 @@ def _build_bracket_from_participants(participants: list[dict]) -> dict:
         current_size = len(new_round)
         round_index += 1
 
+    # назначим столы по кругу для каждого раунда
+    try:
+        tnum = max(1, int(tables))
+    except Exception:
+        tnum = 1
+    for r in rounds:
+        for idx, m in enumerate(r):
+            m["table"] = (idx % tnum) + 1
+
     return {
         "generated_at": _now_iso(),
         "participants": participants,
         "rounds": rounds,
+        "tables": tnum,
     }
 
 
@@ -594,9 +604,10 @@ def _bracket_viewmodel(bracket: dict) -> dict:
                 "p1": p1,
                 "p2": p2,
                 "winner": match.get("winner"),
+                "table": match.get("table"),
             })
         rounds_vm.append(row)
-    return {"rounds": rounds_vm, "participants": bracket.get("participants", [])}
+    return {"rounds": rounds_vm, "participants": bracket.get("participants", []), "tables": bracket.get("tables", 1)}
 
 
 @app.get("/bracket")
@@ -642,7 +653,15 @@ def admin_bracket_generate():
     if len(parts) < 2:
         flash("Недостаточно участников для генерации сетки (нужно минимум 2).")
         return redirect(url_for("admin_bracket"))
-    bracket = _build_bracket_from_participants(parts)
+    try:
+        tables = int(request.form.get("tables", "1"))
+    except Exception:
+        tables = 1
+    if tables < 1:
+        tables = 1
+    if tables > 32:
+        tables = 32
+    bracket = _build_bracket_from_participants(parts, tables=tables)
     _write_bracket(bracket)
     flash("Сетка создана.")
     return redirect(url_for("admin_bracket"))

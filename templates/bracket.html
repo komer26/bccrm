@@ -27,6 +27,7 @@
           <div class="muted">Раунд {{ loop.index }}</div>
           {% for m in rnd %}
             <div class="match">
+              <div class="muted" style="font-size:12px; margin-bottom:6px;">Стол №{{ m.table or '?' }}</div>
               <div class="slot {{ 'winner' if m.winner==1 else '' }} {{ 'empty' if not m.p1 }}">
                 {% if m.p1 %}
                   <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p1.photo_filename) }}" alt="">

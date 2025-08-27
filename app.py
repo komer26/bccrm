@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.utils import secure_filename
 import os
 from pathlib import Path
@@ -469,6 +469,10 @@ def _read_bracket():
 def _write_bracket(data: dict) -> None:
     import json
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        data["updated_at"] = _now_iso()
+    except Exception:
+        pass
     with BRACKET_PATH.open("w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
@@ -598,9 +602,23 @@ def public_bracket():
     bracket = _read_bracket()
     if not bracket:
         flash("Сетка пока не создана. Обратитесь к администратору.")
-        return render_template("bracket.html", view=None)
+        return render_template("bracket.html", view=None, UPDATED_AT=None)
     view = _bracket_viewmodel(bracket)
-    return render_template("bracket.html", view=view)
+    return render_template("bracket.html", view=view, UPDATED_AT=bracket.get("updated_at") or bracket.get("generated_at"))
+
+
+@app.get("/bracket.json")
+def public_bracket_json():
+    _ensure_storage_ready()
+    bracket = _read_bracket()
+    updated = None
+    if bracket:
+        updated = bracket.get("updated_at") or bracket.get("generated_at")
+    resp = jsonify({
+        "updated_at": updated,
+    })
+    resp.headers["Cache-Control"] = "no-store, max-age=0"
+    return resp
 
 
 @app.get("/admin/bracket")

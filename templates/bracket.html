@@ -48,6 +48,22 @@
         </div>
       {% endfor %}
     </div>
+    <script>
+      (function(){
+        var last = {{ UPDATED_AT|tojson }};
+        function poll(){
+          fetch('{{ url_for('public_bracket_json') }}', { cache: 'no-store' }).then(function(r){ return r.json(); }).then(function(d){
+            if (!last) { last = d.updated_at; return; }
+            if (d && d.updated_at && d.updated_at !== last) {
+              location.reload();
+            }
+          }).catch(function(){}).finally(function(){
+            setTimeout(poll, 3000);
+          });
+        }
+        setTimeout(poll, 3000);
+      })();
+    </script>
   {% endif %}
 {% endblock %}
 

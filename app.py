@@ -346,6 +346,9 @@ def participants_list():
         with CSV_PATH.open("r", newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
+                role_val = (row.get("role", "") or "").strip().lower()
+                if role_val == "org":
+                    continue
                 participants.append({
                     "timestamp": row.get("timestamp", ""),
                     "last_name": row.get("last_name", ""),

@@ -140,7 +140,7 @@
         "p2_from": {
           "seed": 1
         },
-        "winner": 1
+        "winner": 2
       },
       {
         "id": "r1m5",
@@ -150,7 +150,7 @@
         "p2_from": {
           "seed": 4
         },
-        "winner": null
+        "winner": 1
       },
       {
         "id": "r1m6",
@@ -160,7 +160,7 @@
         "p2_from": {
           "seed": 9
         },
-        "winner": null
+        "winner": 1
       },
       {
         "id": "r1m7",
@@ -170,7 +170,7 @@
         "p2_from": {
           "seed": 5
         },
-        "winner": null
+        "winner": 1
       },
       {
         "id": "r1m8",
@@ -190,7 +190,7 @@
           "winner_round": 0,
           "winner_match": 1
         },
-        "winner": null
+        "winner": 1
       },
       {
         "id": "r2m2",
@@ -202,7 +202,7 @@
           "winner_round": 0,
           "winner_match": 3
         },
-        "winner": null
+        "winner": 2
       },
       {
         "id": "r2m3",
@@ -214,7 +214,7 @@
           "winner_round": 0,
           "winner_match": 5
         },
-        "winner": null
+        "winner": 1
       },
       {
         "id": "r2m4",
@@ -226,7 +226,7 @@
           "winner_round": 0,
           "winner_match": 7
         },
-        "winner": null
+        "winner": 1
       }
     ],
     [
@@ -270,5 +270,5 @@
       }
     ]
   ],
-  "updated_at": "2025-08-27T07:16:44"
+  "updated_at": "2025-08-27T07:17:53"
 }

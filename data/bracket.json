@@ -120,7 +120,7 @@
         "p2_from": {
           "seed": 12
         },
-        "winner": null
+        "winner": 2
       },
       {
         "id": "r1m3",
@@ -130,7 +130,7 @@
         "p2_from": {
           "seed": 11
         },
-        "winner": null
+        "winner": 2
       },
       {
         "id": "r1m4",
@@ -140,7 +140,7 @@
         "p2_from": {
           "seed": 1
         },
-        "winner": null
+        "winner": 1
       },
       {
         "id": "r1m5",
@@ -269,5 +269,6 @@
         "winner": null
       }
     ]
-  ]
+  ],
+  "updated_at": "2025-08-27T07:16:44"
 }

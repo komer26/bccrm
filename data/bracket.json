@@ -189,7 +189,7 @@
           "winner_round": 0,
           "winner_match": 1
         },
-        "winner": null,
+        "winner": 1,
         "table": 1
       },
       {
@@ -290,5 +290,9 @@
     "winner": null,
     "table": 1
   },
+<<<<<<< Updated upstream
   "updated_at": "2025-08-28T07:35:02"
+=======
+  "updated_at": "2025-08-28T07:34:56"
+>>>>>>> Stashed changes
 }

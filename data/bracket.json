@@ -1,0 +1,281 @@
+{
+  "generated_at": "2025-08-28T06:51:09",
+  "participants": [
+    {
+      "id": 0,
+      "last_name": "Бондарюк",
+      "first_name": "Ольга",
+      "photo_filename": "20250825_095447__1000127279.jpg",
+      "name": "Бондарюк Ольга"
+    },
+    {
+      "id": 1,
+      "last_name": "Иванцова",
+      "first_name": "Ирина",
+      "photo_filename": "20250825_095619__1000127287.jpg",
+      "name": "Иванцова Ирина"
+    },
+    {
+      "id": 2,
+      "last_name": "Харламов",
+      "first_name": "Вадим",
+      "photo_filename": "20250825_095713__1000127289.jpg",
+      "name": "Харламов Вадим"
+    },
+    {
+      "id": 3,
+      "last_name": "Лапшинов",
+      "first_name": "Александр",
+      "photo_filename": "20250825_095805__1000127291.jpg",
+      "name": "Лапшинов Александр"
+    },
+    {
+      "id": 5,
+      "last_name": "Рахманин",
+      "first_name": "Вячеслав",
+      "photo_filename": "20250825_095939__1000127295.jpg",
+      "name": "Рахманин Вячеслав"
+    },
+    {
+      "id": 6,
+      "last_name": "Скубиёв",
+      "first_name": "Олег",
+      "photo_filename": "20250825_100049__1000127297.jpg",
+      "name": "Скубиёв Олег"
+    },
+    {
+      "id": 7,
+      "last_name": "Лисюнин",
+      "first_name": "Александр",
+      "photo_filename": "20250825_100542__1000127299.jpg",
+      "name": "Лисюнин Александр"
+    },
+    {
+      "id": 8,
+      "last_name": "Гришаев",
+      "first_name": "Михаил",
+      "photo_filename": "20250825_100627__1000127301.jpg",
+      "name": "Гришаев Михаил"
+    },
+    {
+      "id": 9,
+      "last_name": "Жданов",
+      "first_name": "Станислав",
+      "photo_filename": "20250825_100703__1000127302.jpg",
+      "name": "Жданов Станислав"
+    },
+    {
+      "id": 10,
+      "last_name": "Мазаник",
+      "first_name": "Сергей",
+      "photo_filename": "20250825_100856__1000127305.jpg",
+      "name": "Мазаник Сергей"
+    },
+    {
+      "id": 11,
+      "last_name": "Маслов",
+      "first_name": "Роман",
+      "photo_filename": "20250825_101922__E1DE8A32-4D6A-4801-B227-DC72510AB552.png",
+      "name": "Маслов Роман"
+    },
+    {
+      "id": 12,
+      "last_name": "Долгов",
+      "first_name": "Павел",
+      "photo_filename": "20250825_130643__1000127352.jpg",
+      "name": "Долгов Павел"
+    },
+    {
+      "id": 13,
+      "last_name": "Мокроусов",
+      "first_name": "Виталий",
+      "photo_filename": "20250826_072006__1000127612.jpg",
+      "name": "Мокроусов Виталий"
+    }
+  ],
+  "rounds": [
+    [
+      {
+        "id": "r1m1",
+        "p1_from": {
+          "seed": 10
+        },
+        "p2_from": {
+          "seed": 7
+        },
+        "winner": 1,
+        "table": 1
+      },
+      {
+        "id": "r1m2",
+        "p1_from": {
+          "seed": 1
+        },
+        "p2_from": {
+          "seed": 8
+        },
+        "winner": 1,
+        "table": 2
+      },
+      {
+        "id": "r1m3",
+        "p1_from": {
+          "seed": 11
+        },
+        "p2_from": {
+          "seed": 12
+        },
+        "winner": 1,
+        "table": 3
+      },
+      {
+        "id": "r1m4",
+        "p1_from": {
+          "seed": 0
+        },
+        "p2_from": {
+          "seed": 5
+        },
+        "winner": 2,
+        "table": 1
+      },
+      {
+        "id": "r1m5",
+        "p1_from": {
+          "seed": 9
+        },
+        "p2_from": {
+          "seed": 4
+        },
+        "winner": 1,
+        "table": 2
+      },
+      {
+        "id": "r1m6",
+        "p1_from": {
+          "seed": 2
+        },
+        "p2_from": {
+          "seed": 6
+        },
+        "winner": 1,
+        "table": 3
+      },
+      {
+        "id": "r1m7",
+        "p1_from": {
+          "seed": 3
+        },
+        "p2_from": null,
+        "winner": 1,
+        "table": 1
+      },
+      {
+        "id": "r1m8",
+        "p1_from": null,
+        "p2_from": null,
+        "winner": null,
+        "table": 2
+      }
+    ],
+    [
+      {
+        "id": "r2m1",
+        "p1_from": {
+          "winner_round": 0,
+          "winner_match": 0
+        },
+        "p2_from": {
+          "winner_round": 0,
+          "winner_match": 1
+        },
+        "winner": 1,
+        "table": 1
+      },
+      {
+        "id": "r2m2",
+        "p1_from": {
+          "winner_round": 0,
+          "winner_match": 2
+        },
+        "p2_from": {
+          "winner_round": 0,
+          "winner_match": 3
+        },
+        "winner": 2,
+        "table": 2
+      },
+      {
+        "id": "r2m3",
+        "p1_from": {
+          "winner_round": 0,
+          "winner_match": 4
+        },
+        "p2_from": {
+          "winner_round": 0,
+          "winner_match": 5
+        },
+        "winner": 1,
+        "table": 3
+      },
+      {
+        "id": "r2m4",
+        "p1_from": {
+          "winner_round": 0,
+          "winner_match": 6
+        },
+        "p2_from": {
+          "winner_round": 0,
+          "winner_match": 7
+        },
+        "winner": 1,
+        "table": 1
+      }
+    ],
+    [
+      {
+        "id": "r3m1",
+        "p1_from": {
+          "winner_round": 1,
+          "winner_match": 0
+        },
+        "p2_from": {
+          "winner_round": 1,
+          "winner_match": 1
+        },
+        "winner": 1,
+        "table": 1
+      },
+      {
+        "id": "r3m2",
+        "p1_from": {
+          "winner_round": 1,
+          "winner_match": 2
+        },
+        "p2_from": {
+          "winner_round": 1,
+          "winner_match": 3
+        },
+        "winner": 1,
+        "table": 2
+      }
+    ],
+    [
+      {
+        "id": "r4m1",
+        "p1_from": {
+          "winner_round": 2,
+          "winner_match": 0
+        },
+        "p2_from": {
+          "winner_round": 2,
+          "winner_match": 1
+        },
+        "winner": 1,
+        "table": 1
+      }
+    ]
+  ],
+  "tables": 3,
+  "updated_at": "2025-08-28T06:54:03"
+}

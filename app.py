@@ -581,12 +581,23 @@ def _build_bracket_from_participants(participants: list[dict], tables: int = 1) 
     for r in rounds:
         for idx, m in enumerate(r):
             m["table"] = (idx % tnum) + 1
+    # Бронзовый матч (за 3-е место): между проигравшими полуфиналов, если они есть
+    bronze = None
+    if len(rounds) >= 2 and len(rounds[-2]) >= 2:
+        bronze = {
+            "id": "bronze",
+            "p1_from": {"loser_round": len(rounds) - 2, "loser_match": 0},
+            "p2_from": {"loser_round": len(rounds) - 2, "loser_match": 1},
+            "winner": None,
+            "table": 1,
+        }
 
     return {
         "generated_at": _now_iso(),
         "participants": participants,
         "rounds": rounds,
         "tables": tnum,
+        "bronze": bronze,
     }
 
 
@@ -616,6 +627,20 @@ def _resolve_slot(bracket: dict, slot: dict | None):
         if w == 2:
             return _resolve_slot(bracket, match.get("p2_from"))
         return None
+    # из проигравшего другого матча (для бронзового)
+    if "loser_round" in slot and "loser_match" in slot:
+        r = slot["loser_round"]
+        m = slot["loser_match"]
+        try:
+            match = bracket["rounds"][r][m]
+        except Exception:
+            return None
+        w = match.get("winner")
+        if w == 1:
+            return _resolve_slot(bracket, match.get("p2_from"))
+        if w == 2:
+            return _resolve_slot(bracket, match.get("p1_from"))
+        return None
     return None
 
 
@@ -636,7 +661,56 @@ def _bracket_viewmodel(bracket: dict) -> dict:
                 "table": match.get("table"),
             })
         rounds_vm.append(row)
-    return {"rounds": rounds_vm, "participants": bracket.get("participants", []), "tables": bracket.get("tables", 1)}
+    bronze = bracket.get("bronze")
+    bronze_vm = None
+    if bronze:
+        bronze_vm = {
+            "id": bronze.get("id"),
+            "p1": _resolve_slot(bracket, bronze.get("p1_from")),
+            "p2": _resolve_slot(bracket, bronze.get("p2_from")),
+            "winner": bronze.get("winner"),
+            "table": bronze.get("table"),
+        }
+    return {"rounds": rounds_vm, "participants": bracket.get("participants", []), "tables": bracket.get("tables", 1), "bronze": bronze_vm}
+
+
+def _bracket_complete(bracket: dict) -> bool:
+    # все матчи всех раундов имеют winner 1/2
+    for rnd in bracket.get("rounds", []):
+        for match in rnd:
+            if match.get("winner") not in (1, 2):
+                return False
+    # если есть бронза — она тоже должна быть определена
+    bronze = bracket.get("bronze")
+    if bronze is not None:
+        if bronze.get("winner") not in (1, 2):
+            return False
+    return True
+
+
+def _compute_standings(bracket: dict) -> list[dict]:
+    try:
+        final_match = bracket["rounds"][-1][0]
+    except Exception:
+        return []
+    p1 = _resolve_slot(bracket, final_match.get("p1_from"))
+    p2 = _resolve_slot(bracket, final_match.get("p2_from"))
+    w = final_match.get("winner")
+    if w not in (1, 2) or not p1 or not p2:
+        return []
+    first = p1 if w == 1 else p2
+    second = p2 if w == 1 else p1
+    # третье место — победитель бронзового матча, если он есть
+    bronze = bracket.get("bronze")
+    third = None
+    if bronze and bronze.get("winner") in (1, 2):
+        bp1 = _resolve_slot(bracket, bronze.get("p1_from"))
+        bp2 = _resolve_slot(bracket, bronze.get("p2_from"))
+        if bronze.get("winner") == 1:
+            third = bp1
+        else:
+            third = bp2
+    return [first, second] + ([third] if third else [])
 
 
 @app.get("/bracket")
@@ -645,9 +719,17 @@ def public_bracket():
     bracket = _read_bracket()
     if not bracket:
         flash("Сетка пока не создана. Обратитесь к администратору.")
-        return render_template("bracket.html", view=None, UPDATED_AT=None)
+        return render_template("bracket.html", view=None, UPDATED_AT=None, COMPLETE=False, STANDINGS=[])
     view = _bracket_viewmodel(bracket)
-    return render_template("bracket.html", view=view, UPDATED_AT=bracket.get("updated_at") or bracket.get("generated_at"))
+    complete = _bracket_complete(bracket)
+    standings = _compute_standings(bracket) if complete else []
+    return render_template(
+        "bracket.html",
+        view=view,
+        UPDATED_AT=bracket.get("updated_at") or bracket.get("generated_at"),
+        COMPLETE=complete,
+        STANDINGS=standings,
+    )
 
 
 @app.get("/bracket.json")
@@ -656,12 +738,18 @@ def public_bracket_json():
     bracket = _read_bracket()
     updated = None
     view = None
+    complete = False
+    standings = []
     if bracket:
         updated = bracket.get("updated_at") or bracket.get("generated_at")
         view = _bracket_viewmodel(bracket)
+        complete = _bracket_complete(bracket)
+        standings = _compute_standings(bracket) if complete else []
     resp = jsonify({
         "updated_at": updated,
         "view": view,
+        "complete": complete,
+        "standings": standings,
     })
     resp.headers["Cache-Control"] = "no-store, max-age=0"
     return resp

@@ -202,7 +202,7 @@
           "winner_round": 0,
           "winner_match": 3
         },
-        "winner": null,
+        "winner": 2,
         "table": 2
       },
       {
@@ -290,5 +290,5 @@
     "winner": null,
     "table": 1
   },
-  "updated_at": "2025-08-28T07:30:56"
+  "updated_at": "2025-08-28T07:35:02"
 }

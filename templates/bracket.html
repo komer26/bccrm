@@ -48,7 +48,7 @@
     <script>
       (function(){
         {% if COMPLETE %}
-        // Турнир завершён — сетка не рендерится, обновление не требуется
+        window.location.replace("{{ url_for('standings_page') }}");
         return;
         {% endif %}
         var last = {{ UPDATED_AT|tojson }};
@@ -136,10 +136,11 @@
           fetch('{{ url_for('public_bracket_json') }}', { cache: 'no-store' })
             .then(function(r){ return r.json(); })
             .then(function(d){
-              if (!last) { last = d.updated_at; render(d.view); return; }
+              if (!last) { last = d.updated_at; render(d.view); if (d && d.complete) { window.location.replace("{{ url_for('standings_page') }}"); } return; }
               if (d && d.updated_at && d.updated_at !== last) {
                 last = d.updated_at;
                 render(d.view);
+                if (d && d.complete) { window.location.replace("{{ url_for('standings_page') }}"); }
               }
             })
             .catch(function(){})

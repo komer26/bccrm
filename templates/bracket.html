@@ -21,48 +21,65 @@
   {% if not view %}
     <p class="muted">Сетка ещё не создана. Обратитесь к администратору.</p>
   {% else %}
-    <div class="bracket">
-      {% for rnd in view.rounds %}
-        <div class="round">
-          <div class="muted">Раунд {{ loop.index }}</div>
-          {% for m in rnd %}
-            <div class="match">
-              <div class="muted" style="font-size:12px; margin-bottom:6px;">Стол №{{ m.table or '?' }}</div>
-              <div class="slot {{ 'winner' if m.winner==1 else '' }} {{ 'empty' if not m.p1 }}">
-                {% if m.p1 %}
-                  <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p1.photo_filename) }}" alt="">
-                  <div class="name">{{ m.p1.last_name }} {{ m.p1.first_name }}</div>
-                {% else %}
-                  <div class="name">—</div>
-                {% endif %}
-              </div>
-              <div class="slot {{ 'winner' if m.winner==2 else '' }} {{ 'empty' if not m.p2 }}" style="margin-top:6px;">
-                {% if m.p2 %}
-                  <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ m.p2.photo_filename) }}" alt="">
-                  <div class="name">{{ m.p2.last_name }} {{ m.p2.first_name }}</div>
-                {% else %}
-                  <div class="name">—</div>
-                {% endif %}
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% endfor %}
-    </div>
+    <div id="bracket" class="bracket" aria-live="polite"></div>
     <script>
       (function(){
         var last = {{ UPDATED_AT|tojson }};
-        function poll(){
-          fetch('{{ url_for('public_bracket_json') }}', { cache: 'no-store' }).then(function(r){ return r.json(); }).then(function(d){
-            if (!last) { last = d.updated_at; return; }
-            if (d && d.updated_at && d.updated_at !== last) {
-              location.reload();
+        var root = document.getElementById('bracket');
+        function render(view){
+          if (!root) return;
+          if (!view || !view.rounds) { root.innerHTML = '<p class="muted">Сетка ещё не создана.</p>'; return; }
+          var html = '';
+          for (var r=0; r<view.rounds.length; r++){
+            var rnd = view.rounds[r];
+            html += '<div class="round">';
+            html += '<div class="muted">Раунд ' + (r+1) + '</div>';
+            for (var i=0; i<rnd.length; i++){
+              var m = rnd[i];
+              html += '<div class="match">';
+              html += '<div class="muted" style="font-size:12px; margin-bottom:6px;">Стол №' + (m.table || '?') + '</div>';
+              // p1
+              var p1Empty = !m.p1;
+              html += '<div class="slot ' + (m.winner==1? 'winner ': '') + (p1Empty? 'empty': '') + '">';
+              if (m.p1){
+                html += '<img class="avatar" src="' + {{ url_for('static', filename='uploads/__FILE__')|tojson }}.replace('__FILE__', m.p1.photo_filename || '') + '" alt="">';
+                html += '<div class="name">' + (m.p1.last_name||'') + ' ' + (m.p1.first_name||'') + '</div>';
+              } else {
+                html += '<div class="name">—</div>';
+              }
+              html += '</div>';
+              // p2
+              var p2Empty = !m.p2;
+              html += '<div class="slot ' + (m.winner==2? 'winner ': '') + (p2Empty? 'empty': '') + '" style="margin-top:6px;">';
+              if (m.p2){
+                html += '<img class="avatar" src="' + {{ url_for('static', filename='uploads/__FILE__')|tojson }}.replace('__FILE__', m.p2.photo_filename || '') + '" alt="">';
+                html += '<div class="name">' + (m.p2.last_name||'') + ' ' + (m.p2.first_name||'') + '</div>';
+              } else {
+                html += '<div class="name">—</div>';
+              }
+              html += '</div>';
+              html += '</div>';
             }
-          }).catch(function(){}).finally(function(){
-            setTimeout(poll, 3000);
-          });
+            html += '</div>';
+          }
+          root.innerHTML = html;
         }
-        setTimeout(poll, 3000);
+        function poll(){
+          fetch('{{ url_for('public_bracket_json') }}', { cache: 'no-store' })
+            .then(function(r){ return r.json(); })
+            .then(function(d){
+              if (!last) { last = d.updated_at; render(d.view); return; }
+              if (d && d.updated_at && d.updated_at !== last) {
+                last = d.updated_at;
+                render(d.view);
+              }
+            })
+            .catch(function(){})
+            .finally(function(){ setTimeout(poll, 2000); });
+        }
+        // initial render
+        render({{ view|tojson }});
+        setTimeout(poll, 2000);
       })();
     </script>
   {% endif %}

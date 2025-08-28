@@ -835,6 +835,35 @@ def admin_bracket_winner():
     return redirect(url_for("admin_bracket"))
 
 
+@app.post("/admin/bracket/winner_bronze")
+def admin_bracket_winner_bronze():
+    if (resp := _require_admin()) is not None:
+        return resp
+    bracket = _read_bracket()
+    if not bracket or not bracket.get("bronze"):
+        flash("Матч за 3-е место не найден.")
+        return redirect(url_for("admin_bracket"))
+    try:
+        w = int(request.form.get("winner", ""))
+        assert w in (1, 2)
+    except Exception:
+        flash("Некорректные данные.")
+        return redirect(url_for("admin_bracket"))
+    bronze = bracket["bronze"]
+    p1 = _resolve_slot(bracket, bronze.get("p1_from"))
+    p2 = _resolve_slot(bracket, bronze.get("p2_from"))
+    if w == 1 and not p1:
+        flash("Нельзя выбрать победителем пустой слот.")
+        return redirect(url_for("admin_bracket"))
+    if w == 2 and not p2:
+        flash("Нельзя выбрать победителем пустой слот.")
+        return redirect(url_for("admin_bracket"))
+    bronze["winner"] = w
+    _write_bracket(bracket)
+    flash("Результат матча за 3-е место сохранён.")
+    return redirect(url_for("admin_bracket"))
+
+
 @app.post("/admin/settings/sms")
 def admin_settings_sms():
     if (resp := _require_admin()) is not None:

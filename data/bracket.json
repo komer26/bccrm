@@ -103,7 +103,7 @@
         "p2_from": {
           "seed": 3
         },
-        "winner": null,
+        "winner": 1,
         "table": 1
       },
       {
@@ -114,7 +114,7 @@
         "p2_from": {
           "seed": 12
         },
-        "winner": null,
+        "winner": 2,
         "table": 2
       },
       {
@@ -125,7 +125,7 @@
         "p2_from": {
           "seed": 9
         },
-        "winner": null,
+        "winner": 2,
         "table": 3
       },
       {
@@ -136,7 +136,7 @@
         "p2_from": {
           "seed": 8
         },
-        "winner": null,
+        "winner": 2,
         "table": 1
       },
       {
@@ -147,7 +147,7 @@
         "p2_from": {
           "seed": 5
         },
-        "winner": null,
+        "winner": 2,
         "table": 2
       },
       {
@@ -158,7 +158,7 @@
         "p2_from": {
           "seed": 1
         },
-        "winner": null,
+        "winner": 2,
         "table": 3
       },
       {
@@ -290,5 +290,5 @@
     "winner": null,
     "table": 1
   },
-  "updated_at": "2025-08-28T07:05:53"
+  "updated_at": "2025-08-28T07:06:52"
 }

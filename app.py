@@ -732,6 +732,20 @@ def public_bracket():
     )
 
 
+@app.get("/standings")
+def standings_page():
+    _ensure_storage_ready()
+    bracket = _read_bracket()
+    if not bracket:
+        flash("Итоги недоступны: сетка не создана.")
+        return redirect(url_for("public_bracket"))
+    if not _bracket_complete(bracket):
+        flash("Турнир ещё не завершён.")
+        return redirect(url_for("public_bracket"))
+    standings = _compute_standings(bracket)
+    return render_template("standings.html", standings=standings)
+
+
 @app.get("/bracket.json")
 def public_bracket_json():
     _ensure_storage_ready()

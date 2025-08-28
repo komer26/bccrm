@@ -243,7 +243,7 @@
           "winner_round": 1,
           "winner_match": 1
         },
-        "winner": 1,
+        "winner": 2,
         "table": 1
       },
       {
@@ -287,8 +287,8 @@
       "loser_round": 2,
       "loser_match": 1
     },
-    "winner": 2,
+    "winner": 1,
     "table": 1
   },
-  "updated_at": "2025-08-28T07:12:28"
+  "updated_at": "2025-08-28T07:18:55"
 }

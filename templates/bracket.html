@@ -5,11 +5,20 @@
     .bracket { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 16px; overflow-x: auto; padding-bottom: 8px; }
     .round { display: grid; align-content: start; gap: 12px; }
     .match { background: rgba(15,23,42,0.7); border:1px solid var(--border); border-radius: 12px; padding: 10px; }
-    .slot { display:flex; gap:8px; align-items:center; padding:6px 8px; border-radius:8px; border:1px dashed var(--border); }
+    .slot { position: relative; display:flex; gap:8px; align-items:center; padding:6px 8px; border-radius:8px; border:1px dashed var(--border); }
     .slot.empty { opacity: .6; font-style: italic; }
     .slot .avatar { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); object-fit: cover; }
     .slot .name { font-weight:700; }
     .winner { border-color: rgba(37,99,235,0.6); box-shadow: inset 0 0 0 1px rgba(37,99,235,0.3); }
+    /* Анимации */
+    .changed { animation: fade-highlight 1000ms ease-out 1; }
+    @keyframes fade-highlight { 0% { background: rgba(37,99,235,0.18); } 100% { background: transparent; } }
+    .win-flash { animation: win-glow 900ms ease-out 1; }
+    @keyframes win-glow { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.0), inset 0 0 0 2px rgba(34,197,94,0.0); }
+                          40% { box-shadow: 0 8px 24px 0 rgba(34,197,94,0.35); }
+                          100% { box-shadow: inset 0 0 0 2px rgba(37,99,235,0.3); } }
+    .win-badge { position:absolute; top:-8px; right:-8px; background: linear-gradient(90deg, #22c55e, #16a34a); color:#fff; font-size:11px; font-weight:800; padding:4px 8px; border-radius:999px; border:1px solid var(--border); transform: translateY(-4px) scale(0.9); opacity: 0; animation: pop-in 600ms ease-out forwards; }
+    @keyframes pop-in { 0% { transform: translateY(-6px) scale(0.85); opacity: 0; } 60% { transform: translateY(0) scale(1.02); opacity: 1; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
   </style>
 {% endblock %}
 {% block content %}
@@ -26,6 +35,11 @@
       (function(){
         var last = {{ UPDATED_AT|tojson }};
         var root = document.getElementById('bracket');
+        var prev = null;
+        function getPrevMatch(r, i){
+          if (!prev || !prev.rounds || !prev.rounds[r] || !prev.rounds[r][i]) return null;
+          return prev.rounds[r][i];
+        }
         function render(view){
           if (!root) return;
           if (!view || !view.rounds) { root.innerHTML = '<p class="muted">Сетка ещё не создана.</p>'; return; }
@@ -36,24 +50,33 @@
             html += '<div class="muted">Раунд ' + (r+1) + '</div>';
             for (var i=0; i<rnd.length; i++){
               var m = rnd[i];
-              html += '<div class="match">';
+              var pm = getPrevMatch(r, i);
+              var p1Changed = !!(pm && ((pm.p1 && m.p1 && pm.p1.id !== m.p1.id) || (!!pm.p1 !== !!m.p1)));
+              var p2Changed = !!(pm && ((pm.p2 && m.p2 && pm.p2.id !== m.p2.id) || (!!pm.p2 !== !!m.p2)));
+              var winnerChanged = !!(pm && pm.winner !== m.winner && (m.winner===1 || m.winner===2));
+              var matchClass = 'match' + ((p1Changed || p2Changed) ? ' changed' : '');
+              html += '<div class="' + matchClass + '">';
               html += '<div class="muted" style="font-size:12px; margin-bottom:6px;">Стол №' + (m.table || '?') + '</div>';
               // p1
               var p1Empty = !m.p1;
-              html += '<div class="slot ' + (m.winner==1? 'winner ': '') + (p1Empty? 'empty': '') + '">';
+              var p1WinClass = (m.winner==1? 'winner ' : '') + ((winnerChanged && m.winner==1) ? 'win-flash ' : '');
+              html += '<div class="slot ' + p1WinClass + (p1Empty? 'empty': '') + '">';
               if (m.p1){
                 html += '<img class="avatar" src="' + {{ url_for('static', filename='uploads/__FILE__')|tojson }}.replace('__FILE__', m.p1.photo_filename || '') + '" alt="">';
                 html += '<div class="name">' + (m.p1.last_name||'') + ' ' + (m.p1.first_name||'') + '</div>';
+                if (winnerChanged && m.winner==1) { html += '<div class="win-badge">Победа</div>'; }
               } else {
                 html += '<div class="name">—</div>';
               }
               html += '</div>';
               // p2
               var p2Empty = !m.p2;
-              html += '<div class="slot ' + (m.winner==2? 'winner ': '') + (p2Empty? 'empty': '') + '" style="margin-top:6px;">';
+              var p2WinClass = (m.winner==2? 'winner ' : '') + ((winnerChanged && m.winner==2) ? 'win-flash ' : '');
+              html += '<div class="slot ' + p2WinClass + (p2Empty? 'empty': '') + '" style="margin-top:6px;">';
               if (m.p2){
                 html += '<img class="avatar" src="' + {{ url_for('static', filename='uploads/__FILE__')|tojson }}.replace('__FILE__', m.p2.photo_filename || '') + '" alt="">';
                 html += '<div class="name">' + (m.p2.last_name||'') + ' ' + (m.p2.first_name||'') + '</div>';
+                if (winnerChanged && m.winner==2) { html += '<div class="win-badge">Победа</div>'; }
               } else {
                 html += '<div class="name">—</div>';
               }
@@ -63,6 +86,7 @@
             html += '</div>';
           }
           root.innerHTML = html;
+          prev = view;
         }
         function poll(){
           fetch('{{ url_for('public_bracket_json') }}', { cache: 'no-store' })

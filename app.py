@@ -655,10 +655,13 @@ def public_bracket_json():
     _ensure_storage_ready()
     bracket = _read_bracket()
     updated = None
+    view = None
     if bracket:
         updated = bracket.get("updated_at") or bracket.get("generated_at")
+        view = _bracket_viewmodel(bracket)
     resp = jsonify({
         "updated_at": updated,
+        "view": view,
     })
     resp.headers["Cache-Control"] = "no-store, max-age=0"
     return resp

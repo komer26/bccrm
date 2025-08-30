@@ -1,25 +1,5 @@
 {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  "generated_at": "2025-08-30T06:03:05",
-=======
-  "generated_at": "2025-08-30T06:01:44",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T06:01:44",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T06:01:44",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T06:01:44",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T06:01:44",
->>>>>>> Stashed changes
+  "generated_at": "2025-08-30T06:24:41",
   "participants": [
     {
       "id": 0,
@@ -65,10 +45,10 @@
     },
     {
       "id": 7,
-      "last_name": "Лисюнин",
+      "last_name": "Лесюнин",
       "first_name": "Александр",
-      "photo_filename": "20250825_100542__1000127299.jpg",
-      "name": "Лисюнин Александр"
+      "photo_filename": "20250828_041910__1000128279.jpg",
+      "name": "Лесюнин Александр"
     },
     {
       "id": 8,
@@ -79,38 +59,45 @@
     },
     {
       "id": 9,
-      "last_name": "Жданов",
-      "first_name": "Станислав",
-      "photo_filename": "20250825_100703__1000127302.jpg",
-      "name": "Жданов Станислав"
-    },
-    {
-      "id": 10,
-      "last_name": "Мазаник",
-      "first_name": "Сергей",
-      "photo_filename": "20250825_100856__1000127305.jpg",
-      "name": "Мазаник Сергей"
-    },
-    {
-      "id": 11,
       "last_name": "Маслов",
       "first_name": "Роман",
       "photo_filename": "20250825_101922__E1DE8A32-4D6A-4801-B227-DC72510AB552.png",
       "name": "Маслов Роман"
     },
     {
-      "id": 12,
+      "id": 10,
       "last_name": "Долгов",
       "first_name": "Павел",
-      "photo_filename": "20250825_130643__1000127352.jpg",
+      "photo_filename": "20250827_184307__1000128275.jpg",
       "name": "Долгов Павел"
     },
     {
-      "id": 13,
+      "id": 11,
       "last_name": "Мокроусов",
       "first_name": "Виталий",
-      "photo_filename": "20250826_072006__1000127612.jpg",
+      "photo_filename": "20250827_182204__1000128269.png",
       "name": "Мокроусов Виталий"
+    },
+    {
+      "id": 12,
+      "last_name": "Чернов",
+      "first_name": "Юрий",
+      "photo_filename": "20250827_165736__1000128242.jpg",
+      "name": "Чернов Юрий"
+    },
+    {
+      "id": 13,
+      "last_name": "Мазаник",
+      "first_name": "Сергей",
+      "photo_filename": "20250827_182640__1000128272.jpg",
+      "name": "Мазаник Сергей"
+    },
+    {
+      "id": 14,
+      "last_name": "Махмадалиев",
+      "first_name": "Сафар",
+      "photo_filename": "20250828_082124__1000128381.jpg",
+      "name": "Махмадалиев Сафар"
     }
   ],
   "rounds": [
@@ -118,349 +105,86 @@
       {
         "id": "r1m1",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 0
+          "seed": 9
         },
         "p2_from": {
-          "seed": 5
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-          "seed": 11
+          "seed": 1
         },
-        "p2_from": {
-          "seed": 8
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-        },
-        "winner": 1,
+        "winner": null,
         "table": 1
       },
       {
         "id": "r1m2",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 11
-=======
+          "seed": 13
+        },
+        "p2_from": {
           "seed": 4
->>>>>>> Stashed changes
-=======
-          "seed": 4
->>>>>>> Stashed changes
-=======
-          "seed": 4
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 1
-        },
-        "winner": 2,
-        "table": 2
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-          "seed": 11
-        },
-        "p2_from": {
-          "seed": 8
-        },
-        "winner": 1,
-        "table": 1
-=======
-      },
-      {
-        "id": "r1m3",
-        "p1_from": {
-          "seed": 3
-        },
-        "p2_from": {
-          "seed": 5
-        },
-        "winner": 2,
-        "table": 3
->>>>>>> Stashed changes
-      },
-      {
-        "id": "r1m2",
-        "p1_from": {
-<<<<<<< Updated upstream
-          "seed": 4
-        },
-        "p2_from": {
-          "seed": 1
-        },
-        "winner": 2,
-        "table": 2
-=======
-          "seed": 11
-        },
-        "p2_from": {
-          "seed": 8
-        },
-        "winner": 1,
-        "table": 1
-      },
-      {
-        "id": "r1m2",
-        "p1_from": {
-          "seed": 4
-        },
-        "p2_from": {
-          "seed": 1
-        },
-        "winner": 2,
-        "table": 2
-      },
-      {
-        "id": "r1m3",
-        "p1_from": {
-          "seed": 3
-        },
-        "p2_from": {
-          "seed": 5
-        },
-        "winner": 2,
-        "table": 3
-      },
-      {
-        "id": "r1m4",
-        "p1_from": {
-=======
->>>>>>> Stashed changes
-          "seed": 10
-        },
-        "p2_from": {
-          "seed": 7
-<<<<<<< Updated upstream
-        },
-        "winner": 2,
-=======
-      },
-      {
-        "id": "r1m3",
-        "p1_from": {
-          "seed": 3
-        },
-        "p2_from": {
-          "seed": 5
-        },
-        "winner": 2,
-        "table": 3
-      },
-      {
-        "id": "r1m4",
-        "p1_from": {
-          "seed": 10
-        },
-        "p2_from": {
-          "seed": 7
-        },
-        "winner": 2,
->>>>>>> Stashed changes
-=======
-        },
-        "winner": 2,
->>>>>>> Stashed changes
-        "table": 1
->>>>>>> Stashed changes
-      },
-      {
-        "id": "r1m3",
-        "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 3
-        },
-        "p2_from": {
-          "seed": 5
-        },
-        "winner": 2,
-        "table": 3
-      },
-      {
-        "id": "r1m4",
-        "p1_from": {
-          "seed": 10
-        },
-        "p2_from": {
-          "seed": 7
-        },
-        "winner": 2,
-        "table": 1
->>>>>>> Stashed changes
-      },
-      {
-        "id": "r1m3",
-        "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 4
-        },
-        "p2_from": {
-          "seed": 12
-        },
-        "winner": 1,
-=======
-          "seed": 3
-        },
-        "p2_from": {
-          "seed": 5
-        },
-        "winner": 2,
->>>>>>> Stashed changes
-        "table": 3
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 6
         },
         "winner": null,
         "table": 2
->>>>>>> Stashed changes
+      },
+      {
+        "id": "r1m3",
+        "p1_from": {
+          "seed": 12
+        },
+        "p2_from": {
+          "seed": 3
+        },
+        "winner": null,
+        "table": 3
       },
       {
         "id": "r1m4",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 1
-        },
-        "p2_from": {
-          "seed": 9
-        },
-        "winner": 2,
-        "table": 4
-=======
-          "seed": 10
-        },
-        "p2_from": {
           "seed": 7
         },
-        "winner": 2,
+        "p2_from": {
+          "seed": 2
+        },
+        "winner": null,
         "table": 1
->>>>>>> Stashed changes
       },
       {
         "id": "r1m5",
         "p1_from": {
-<<<<<<< Updated upstream
-          "seed": 2
+          "seed": 11
         },
         "p2_from": {
-          "seed": 3
-        },
-        "winner": 1,
-        "table": 5
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 6
+          "seed": 5
         },
         "winner": null,
         "table": 2
->>>>>>> Stashed changes
       },
       {
         "id": "r1m6",
         "p1_from": {
-<<<<<<< Updated upstream
-          "seed": 7
+          "seed": 10
         },
         "p2_from": {
-          "seed": 8
-        },
-        "winner": 2,
-        "table": 1
-=======
-          "seed": 9
-        },
-        "p2_from": {
-=======
-          "seed": 9
-        },
-        "p2_from": {
->>>>>>> Stashed changes
-=======
-          "seed": 9
-        },
-        "p2_from": {
->>>>>>> Stashed changes
-=======
-          "seed": 9
-        },
-        "p2_from": {
->>>>>>> Stashed changes
-=======
-          "seed": 9
-        },
-        "p2_from": {
->>>>>>> Stashed changes
           "seed": 0
         },
         "winner": null,
         "table": 3
->>>>>>> Stashed changes
       },
       {
         "id": "r1m7",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
           "seed": 6
-=======
-          "seed": 2
->>>>>>> Stashed changes
-=======
-          "seed": 2
->>>>>>> Stashed changes
-=======
-          "seed": 2
->>>>>>> Stashed changes
-=======
-          "seed": 2
->>>>>>> Stashed changes
-=======
-          "seed": 2
->>>>>>> Stashed changes
         },
-        "p2_from": null,
-        "winner": 1,
-        "table": 2
+        "p2_from": {
+          "seed": 8
+        },
+        "winner": null,
+        "table": 1
       },
       {
         "id": "r1m8",
         "p1_from": null,
         "p2_from": null,
         "winner": null,
-        "table": 3
+        "table": 2
       }
     ],
     [
@@ -474,7 +198,7 @@
           "winner_round": 0,
           "winner_match": 1
         },
-        "winner": 1,
+        "winner": null,
         "table": 1
       },
       {
@@ -487,7 +211,7 @@
           "winner_round": 0,
           "winner_match": 3
         },
-        "winner": 1,
+        "winner": null,
         "table": 2
       },
       {
@@ -500,7 +224,7 @@
           "winner_round": 0,
           "winner_match": 5
         },
-        "winner": 1,
+        "winner": null,
         "table": 3
       },
       {
@@ -514,7 +238,7 @@
           "winner_match": 7
         },
         "winner": null,
-        "table": 4
+        "table": 1
       }
     ],
     [
@@ -561,7 +285,7 @@
       }
     ]
   ],
-  "tables": 5,
+  "tables": 3,
   "bronze": {
     "id": "bronze",
     "p1_from": {
@@ -575,25 +299,5 @@
     "winner": null,
     "table": 1
   },
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  "updated_at": "2025-08-30T06:03:57"
-=======
-  "updated_at": "2025-08-30T06:02:01"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T06:02:01"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T06:02:01"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T06:02:01"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T06:02:01"
->>>>>>> Stashed changes
+  "updated_at": "2025-08-30T06:24:41"
 }

@@ -84,40 +84,6 @@
           {% endfor %}
         </div>
       {% endfor %}
-      {% if view.bronze %}
-        <div class="round">
-          <div class="muted">Матч за 3-е место</div>
-          <div class="match">
-            <div class="muted" style="font-size:12px; margin-bottom:6px;">Стол №{{ view.bronze.table or '?' }}</div>
-            <div class="slot {{ 'winner' if view.bronze.winner==1 else '' }} {{ 'empty' if not view.bronze.p1 }}">
-              {% if view.bronze.p1 %}
-                <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ view.bronze.p1.photo_filename) }}" alt="">
-                <div class="name">{{ view.bronze.p1.last_name }} {{ view.bronze.p1.first_name }}</div>
-              {% else %}
-                <div class="name">—</div>
-              {% endif %}
-            </div>
-            <div class="slot {{ 'winner' if view.bronze.winner==2 else '' }} {{ 'empty' if not view.bronze.p2 }}" style="margin-top:6px;">
-              {% if view.bronze.p2 %}
-                <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ view.bronze.p2.photo_filename) }}" alt="">
-                <div class="name">{{ view.bronze.p2.last_name }} {{ view.bronze.p2.first_name }}</div>
-              {% else %}
-                <div class="name">—</div>
-              {% endif %}
-            </div>
-            <div class="controls">
-              <form action="{{ url_for('admin_bracket_winner_bronze') }}" method="post" style="display:inline">
-                <input type="hidden" name="winner" value="1">
-                <button type="submit" class="secondary" {% if not view.bronze.p1 %}disabled{% endif %}>Победил верхний</button>
-              </form>
-              <form action="{{ url_for('admin_bracket_winner_bronze') }}" method="post" style="display:inline">
-                <input type="hidden" name="winner" value="2">
-                <button type="submit" class="secondary" {% if not view.bronze.p2 %}disabled{% endif %}>Победил нижний</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      {% endif %}
     </div>
   {% endif %}
 {% endblock %}

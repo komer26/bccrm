@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Админка — Посев участников{% endblock %}
+{% block styles_extra %}
+<style>
+  .seed-list { display:grid; gap:8px; }
+  .seed-item { display:flex; align-items:center; gap:10px; background: rgba(15,23,42,0.7); border:1px solid var(--border); border-radius:10px; padding:8px 10px; }
+  .seed-item .avatar { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); object-fit:cover; }
+  .seed-idx { width:56px; }
+</style>
+{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Ручной посев участников</h1>
+    <a class="button secondary" href="{{ url_for('admin_bracket') }}">Назад к сетке</a>
+  </div>
+
+  <form class="form" action="{{ url_for('admin_bracket_seed_post') }}" method="post">
+    <p class="muted">Укажите порядок посева (1 — самый высокий). Можно вводить одинаковые значения — порядок будет по вводу.</p>
+    <div class="seed-list">
+      {% for it in items %}
+      <div class="seed-item">
+        <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ it.photo) }}" alt="">
+        <div style="flex:1 1 auto;">{{ it.name }}</div>
+        <input class="seed-idx" type="number" name="idx" value="{{ it.idx }}" min="0" max="9999">
+      </div>
+      {% endfor %}
+    </div>
+    <div class="actions" style="margin-top:10px;">
+      <button type="submit">Сохранить порядок</button>
+      <a class="button secondary" href="{{ url_for('admin_bracket') }}">Отмена</a>
+    </div>
+  </form>
+{% endblock %}
+
+

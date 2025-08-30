@@ -525,11 +525,24 @@ def _participants_for_bracket():
     return participants
 
 
-def _build_bracket_from_participants(participants: list[dict], tables: int = 1) -> dict:
+def _build_bracket_from_participants(participants: list[dict], tables: int = 1, seed_indices: list[int] | None = None) -> dict:
     import math
     import random
-    seeds = list(range(len(participants)))
-    random.shuffle(seeds)
+    # Список индексов участников (0..len-1) в порядке посева
+    if seed_indices:
+        # нормализуем: только валидные индексы и без дублей, затем добавим недостающих
+        seen = set()
+        seeds = []
+        for s in seed_indices:
+            if isinstance(s, int) and 0 <= s < len(participants) and s not in seen:
+                seeds.append(s)
+                seen.add(s)
+        for i in range(len(participants)):
+            if i not in seen:
+                seeds.append(i)
+    else:
+        seeds = list(range(len(participants)))
+        random.shuffle(seeds)
     # до ближайшей степени двойки
     def next_pow2(x: int) -> int:
         if x <= 1:
@@ -781,9 +794,42 @@ def admin_bracket_generate():
         tables = 1
     if tables > 32:
         tables = 32
-    bracket = _build_bracket_from_participants(parts, tables=tables)
+    # если был сохранён ручной посев — используем
+    seed_order = session.get("manual_seed_order")
+    bracket = _build_bracket_from_participants(parts, tables=tables, seed_indices=seed_order)
+    session.pop("manual_seed_order", None)
     _write_bracket(bracket)
     flash("Сетка создана.")
+    return redirect(url_for("admin_bracket"))
+
+
+@app.get("/admin/bracket/seed")
+def admin_bracket_seed():
+    if (resp := _require_admin()) is not None:
+        return resp
+    parts = _participants_for_bracket()
+    # по умолчанию — текущий порядок
+    items = []
+    for i, p in enumerate(parts):
+        items.append({"idx": i, "name": f"{p['last_name']} {p['first_name']}", "photo": p.get("photo_filename", "")})
+    return render_template("admin/seed.html", items=items)
+
+
+@app.post("/admin/bracket/seed")
+def admin_bracket_seed_post():
+    if (resp := _require_admin()) is not None:
+        return resp
+    parts = _participants_for_bracket()
+    # ожидаем список индексов idx[] в порядке посева
+    indices = request.form.getlist("idx[]") or request.form.getlist("idx")
+    try:
+        order = [int(x) for x in indices]
+    except Exception:
+        flash("Некорректные данные посева.")
+        return redirect(url_for("admin_bracket_seed"))
+    # нормализация произойдет в _build_bracket_from_participants
+    session["manual_seed_order"] = order
+    flash("Порядок посева сохранён. Сгенерируйте сетку.")
     return redirect(url_for("admin_bracket"))
 
 

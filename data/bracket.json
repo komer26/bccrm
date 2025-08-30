@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-08-30T06:24:41",
+  "generated_at": "2025-08-30T06:34:53",
   "participants": [
     {
       "id": 0,
@@ -23,77 +23,63 @@
       "name": "Харламов Вадим"
     },
     {
-      "id": 3,
-      "last_name": "Лапшинов",
-      "first_name": "Александр",
-      "photo_filename": "20250825_095805__1000127291.jpg",
-      "name": "Лапшинов Александр"
-    },
-    {
-      "id": 5,
+      "id": 4,
       "last_name": "Рахманин",
       "first_name": "Вячеслав",
       "photo_filename": "20250825_095939__1000127295.jpg",
       "name": "Рахманин Вячеслав"
     },
     {
-      "id": 6,
+      "id": 5,
       "last_name": "Скубиёв",
       "first_name": "Олег",
       "photo_filename": "20250825_100049__1000127297.jpg",
       "name": "Скубиёв Олег"
     },
     {
-      "id": 7,
+      "id": 6,
       "last_name": "Лесюнин",
       "first_name": "Александр",
       "photo_filename": "20250828_041910__1000128279.jpg",
       "name": "Лесюнин Александр"
     },
     {
-      "id": 8,
+      "id": 7,
       "last_name": "Гришаев",
       "first_name": "Михаил",
       "photo_filename": "20250825_100627__1000127301.jpg",
       "name": "Гришаев Михаил"
     },
     {
-      "id": 9,
+      "id": 8,
       "last_name": "Маслов",
       "first_name": "Роман",
       "photo_filename": "20250825_101922__E1DE8A32-4D6A-4801-B227-DC72510AB552.png",
       "name": "Маслов Роман"
     },
     {
-      "id": 10,
+      "id": 9,
       "last_name": "Долгов",
       "first_name": "Павел",
       "photo_filename": "20250827_184307__1000128275.jpg",
       "name": "Долгов Павел"
     },
     {
-      "id": 11,
+      "id": 10,
       "last_name": "Мокроусов",
       "first_name": "Виталий",
       "photo_filename": "20250827_182204__1000128269.png",
       "name": "Мокроусов Виталий"
     },
     {
-      "id": 12,
+      "id": 11,
       "last_name": "Чернов",
       "first_name": "Юрий",
       "photo_filename": "20250827_165736__1000128242.jpg",
       "name": "Чернов Юрий"
     },
     {
-      "id": 13,
-      "last_name": "Мазаник",
-      "first_name": "Сергей",
-      "photo_filename": "20250827_182640__1000128272.jpg",
-      "name": "Мазаник Сергей"
-    },
-    {
-      "id": 14,
+      "id": 12,
       "last_name": "Махмадалиев",
       "first_name": "Сафар",
       "photo_filename": "20250828_082124__1000128381.jpg",
@@ -105,10 +91,10 @@
       {
         "id": "r1m1",
         "p1_from": {
-          "seed": 9
+          "seed": 8
         },
         "p2_from": {
-          "seed": 1
+          "seed": 6
         },
         "winner": null,
         "table": 1
@@ -116,10 +102,10 @@
       {
         "id": "r1m2",
         "p1_from": {
-          "seed": 13
+          "seed": 3
         },
         "p2_from": {
-          "seed": 4
+          "seed": 10
         },
         "winner": null,
         "table": 2
@@ -127,10 +113,10 @@
       {
         "id": "r1m3",
         "p1_from": {
-          "seed": 12
+          "seed": 1
         },
         "p2_from": {
-          "seed": 3
+          "seed": 11
         },
         "winner": null,
         "table": 3
@@ -141,7 +127,7 @@
           "seed": 7
         },
         "p2_from": {
-          "seed": 2
+          "seed": 0
         },
         "winner": null,
         "table": 1
@@ -149,7 +135,7 @@
       {
         "id": "r1m5",
         "p1_from": {
-          "seed": 11
+          "seed": 4
         },
         "p2_from": {
           "seed": 5
@@ -160,22 +146,18 @@
       {
         "id": "r1m6",
         "p1_from": {
-          "seed": 10
+          "seed": 9
         },
         "p2_from": {
-          "seed": 0
+          "seed": 2
         },
         "winner": null,
         "table": 3
       },
       {
         "id": "r1m7",
-        "p1_from": {
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 8
-        },
+        "p1_from": null,
+        "p2_from": null,
         "winner": null,
         "table": 1
       },
@@ -299,5 +281,5 @@
     "winner": null,
     "table": 1
   },
-  "updated_at": "2025-08-30T06:24:41"
+  "updated_at": "2025-08-30T06:34:53"
 }

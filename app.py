@@ -17,6 +17,7 @@ DATA_DIR = BASE_DIR / "data"
 CSV_PATH = DATA_DIR / "participants.csv"
 CONFIG_PATH = DATA_DIR / "config.json"
 BRACKET_PATH = DATA_DIR / "bracket.json"
+STANDINGS_PATH = DATA_DIR / "standings.json"
 CSV_HEADERS = [
     "timestamp",
     "last_name",
@@ -506,6 +507,30 @@ def _write_bracket(data: dict) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+def _read_standings() -> dict | None:
+    try:
+        import json
+        with STANDINGS_PATH.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+    except Exception:
+        return None
+
+
+def _write_standings(first_id: int | None, second_id: int | None, third_id: int | None) -> None:
+    import json
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "first_id": first_id,
+        "second_id": second_id,
+        "third_id": third_id,
+        "updated_at": _now_iso(),
+    }
+    with STANDINGS_PATH.open("w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+
+
 def _participants_for_bracket():
     participants = []
     if CSV_PATH.exists():
@@ -726,21 +751,44 @@ def _compute_standings(bracket: dict) -> list[dict]:
     return [first, second] + ([third] if third else [])
 
 
+def _standings_from_manual(parts: list[dict]) -> list[dict]:
+    manual = _read_standings()
+    if not manual:
+        return []
+    id_to_part = {p.get("id"): p for p in parts}
+    result: list[dict] = []
+    for key in ("first_id", "second_id", "third_id"):
+        pid = manual.get(key)
+        if pid is None:
+            continue
+        p = id_to_part.get(pid)
+        if p:
+            result.append(p)
+    return result
+
+
 @app.get("/bracket")
 def public_bracket():
     _ensure_storage_ready()
     bracket = _read_bracket()
+    parts = _participants_for_bracket()
+    manual_standings = _standings_from_manual(parts)
     if not bracket:
-        flash("Сетка пока не создана. Обратитесь к администратору.")
-        return render_template("bracket.html", view=None, UPDATED_AT=None, COMPLETE=False, STANDINGS=[])
+        return render_template(
+            "bracket.html",
+            view=None,
+            UPDATED_AT=None,
+            COMPLETE=bool(manual_standings),
+            STANDINGS=manual_standings,
+        )
     view = _bracket_viewmodel(bracket)
     complete = _bracket_complete(bracket)
-    standings = _compute_standings(bracket) if complete else []
+    standings = manual_standings if manual_standings else (_compute_standings(bracket) if complete else [])
     return render_template(
         "bracket.html",
         view=view,
         UPDATED_AT=bracket.get("updated_at") or bracket.get("generated_at"),
-        COMPLETE=complete,
+        COMPLETE=bool(standings),
         STANDINGS=standings,
     )
 
@@ -753,19 +801,64 @@ def public_bracket_json():
     view = None
     complete = False
     standings = []
+    parts = _participants_for_bracket()
+    manual_standings = _standings_from_manual(parts)
+    standings_updated = None
+    manual = _read_standings()
+    if manual:
+        standings_updated = manual.get("updated_at")
     if bracket:
         updated = bracket.get("updated_at") or bracket.get("generated_at")
         view = _bracket_viewmodel(bracket)
         complete = _bracket_complete(bracket)
-        standings = _compute_standings(bracket) if complete else []
+        standings = manual_standings if manual_standings else (_compute_standings(bracket) if complete else [])
+        # обновление — берём максимальную метку: сетка/итоги
+        if standings_updated and updated:
+            updated = max(str(updated), str(standings_updated))
+        elif standings_updated and not updated:
+            updated = standings_updated
+    else:
+        standings = manual_standings
+        updated = standings_updated
     resp = jsonify({
         "updated_at": updated,
         "view": view,
-        "complete": complete,
+        "complete": bool(standings),
         "standings": standings,
     })
     resp.headers["Cache-Control"] = "no-store, max-age=0"
     return resp
+
+
+@app.get("/admin/standings")
+def admin_standings():
+    if (resp := _require_admin()) is not None:
+        return resp
+    parts = _participants_for_bracket()
+    manual = _read_standings() or {}
+    return render_template("admin/standings.html", participants=parts, manual=manual)
+
+
+@app.post("/admin/standings")
+def admin_standings_post():
+    if (resp := _require_admin()) is not None:
+        return resp
+    def to_int(val):
+        try:
+            return int(val)
+        except Exception:
+            return None
+    first = to_int(request.form.get("first"))
+    second = to_int(request.form.get("second"))
+    third = to_int(request.form.get("third"))
+    # нельзя дублировать
+    picks = [p for p in (first, second, third) if p is not None]
+    if len(set(picks)) != len(picks):
+        flash("Выбраны дублирующиеся участники. Исправьте выбор.")
+        return redirect(url_for("admin_standings"))
+    _write_standings(first, second, third)
+    flash("Итоги сохранены.")
+    return redirect(url_for("admin_standings"))
 
 
 @app.get("/admin/bracket")

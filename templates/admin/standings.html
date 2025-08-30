@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Админка — Итоги турнира{% endblock %}
+{% block content %}
+  <div class="topbar">
+    <h1 class="headline">Итоги турнира (ручной выбор)</h1>
+    <a class="button secondary" href="{{ url_for('admin_bracket') }}">К сетке</a>
+  </div>
+
+  <form class="form" action="{{ url_for('admin_standings') }}" method="post">
+    <label>
+      1 место
+      <select name="first">
+        <option value="">— не выбрано —</option>
+        {% for p in participants %}
+          <option value="{{ p.id }}" {{ 'selected' if manual.first_id == p.id else '' }}>{{ p.last_name }} {{ p.first_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      2 место
+      <select name="second">
+        <option value="">— не выбрано —</option>
+        {% for p in participants %}
+          <option value="{{ p.id }}" {{ 'selected' if manual.second_id == p.id else '' }}>{{ p.last_name }} {{ p.first_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      3 место
+      <select name="third">
+        <option value="">— не выбрано —</option>
+        {% for p in participants %}
+          <option value="{{ p.id }}" {{ 'selected' if manual.third_id == p.id else '' }}>{{ p.last_name }} {{ p.first_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <div class="actions">
+      <button type="submit">Сохранить итоги</button>
+      <a class="button secondary" href="{{ url_for('admin_index') }}">К участникам</a>
+    </div>
+  </form>
+{% endblock %}
+
+

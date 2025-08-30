@@ -38,19 +38,11 @@
           {% if STANDINGS|length>1 and STANDINGS[1] %}<li><strong>2 место:</strong> {{ STANDINGS[1].last_name }} {{ STANDINGS[1].first_name }}</li>{% endif %}
           {% if STANDINGS|length>2 and STANDINGS[2] %}<li><strong>3 место:</strong> {{ STANDINGS[2].last_name }} {{ STANDINGS[2].first_name }}</li>{% endif %}
         </ol>
-        <div class="actions">
-          <a class="button primary-strong" href="{{ url_for('standings_page') }}">Открыть страницу «Итоги»</a>
-        </div>
       </div>
-    {% else %}
-      <div id="bracket" class="bracket" aria-live="polite"></div>
     {% endif %}
+    <div id="bracket" class="bracket" aria-live="polite"></div>
     <script>
       (function(){
-        {% if COMPLETE %}
-        window.location.replace("{{ url_for('standings_page') }}");
-        return;
-        {% endif %}
         var last = {{ UPDATED_AT|tojson }};
         var root = document.getElementById('bracket');
         var prev = null;
@@ -136,11 +128,11 @@
           fetch('{{ url_for('public_bracket_json') }}', { cache: 'no-store' })
             .then(function(r){ return r.json(); })
             .then(function(d){
-              if (!last) { last = d.updated_at; render(d.view); if (d && d.complete) { window.location.replace("{{ url_for('standings_page') }}"); } return; }
+              if (!last) { last = d.updated_at; render(d.view); if (d.complete) location.reload(); return; }
               if (d && d.updated_at && d.updated_at !== last) {
                 last = d.updated_at;
                 render(d.view);
-                if (d && d.complete) { window.location.replace("{{ url_for('standings_page') }}"); }
+                if (d.complete) location.reload();
               }
             })
             .catch(function(){})

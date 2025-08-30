@@ -109,7 +109,6 @@
             <a class="btn secondary" href="{{ url_for('register_form') }}">Регистрация</a>
             <a class="btn primary-strong" href="{{ url_for('participants_list') }}">Зарегистрированные участники</a>
             <a class="btn secondary" href="{{ url_for('public_bracket') }}">Сетка</a>
-            <a class="btn secondary" href="{{ url_for('standings_page') }}">Итоги</a>
             <a class="btn secondary" href="{{ url_for('organizers_list') }}">Организаторы</a>
             {% if session.get('is_admin') %}<a class="btn" href="{{ url_for('admin_index') }}">Админка</a>{% endif %}
         </div>

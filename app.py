@@ -913,14 +913,18 @@ def admin_bracket_seed_post():
     if (resp := _require_admin()) is not None:
         return resp
     parts = _participants_for_bracket()
-    # ожидаем список индексов idx[] в порядке посева
-    indices = request.form.getlist("idx[]") or request.form.getlist("idx")
-    try:
-        order = [int(x) for x in indices]
-    except Exception:
-        flash("Некорректные данные посева.")
-        return redirect(url_for("admin_bracket_seed"))
-    # нормализация произойдет в _build_bracket_from_participants
+    # ожидаем rank_i для каждого i (0..n-1), где меньше — выше посев
+    ranked: list[tuple[int, int]] = []  # (rank, idx)
+    for i in range(len(parts)):
+        raw = request.form.get(f"rank_{i}")
+        try:
+            rank = int(str(raw)) if raw not in (None, "") else 10**9
+        except Exception:
+            rank = 10**9
+        ranked.append((rank, i))
+    # сортируем по rank, затем по исходному индексу (стабильно)
+    ranked.sort(key=lambda t: (t[0], t[1]))
+    order = [idx for _, idx in ranked]
     session["manual_seed_order"] = order
     flash("Порядок посева сохранён. Сгенерируйте сетку.")
     return redirect(url_for("admin_bracket"))

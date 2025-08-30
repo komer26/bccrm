@@ -17,14 +17,24 @@
     <a class="button secondary" href="{{ url_for('admin_bracket') }}">Назад к сетке</a>
   </div>
 
+<<<<<<< Updated upstream
   <form id="seedForm" class="form" action="{{ url_for('admin_bracket_seed_post') }}" method="post">
     <p class="muted">Перетаскивайте участников для задания порядка посева (сверху — более высокий посев).</p>
     <div class="seed-list" id="seedList">
+=======
+  <form class="form" action="{{ url_for('admin_bracket_seed_post') }}" method="post">
+    <p class="muted">Укажите ранг посева: 1 — самый высокий. Одинаковые ранги допустимы (будет исходный порядок).</p>
+    <div class="seed-list">
+>>>>>>> Stashed changes
       {% for it in items %}
       <div class="seed-item" draggable="true" data-idx="{{ it.idx }}">
         <div class="drag-handle" title="Перетащить" aria-hidden="true">≡</div>
         <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ it.photo) }}" alt="">
         <div style="flex:1 1 auto;">{{ it.name }}</div>
+<<<<<<< Updated upstream
+=======
+        <input class="seed-idx" type="number" name="rank_{{ it.idx }}" placeholder="ранг" min="1" max="9999">
+>>>>>>> Stashed changes
       </div>
       {% endfor %}
     </div>

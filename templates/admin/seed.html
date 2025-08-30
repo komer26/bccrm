@@ -6,6 +6,9 @@
   .seed-item { display:flex; align-items:center; gap:10px; background: rgba(15,23,42,0.7); border:1px solid var(--border); border-radius:10px; padding:8px 10px; }
   .seed-item .avatar { width:28px; height:28px; border-radius:6px; border:1px solid var(--border); object-fit:cover; }
   .seed-idx { width:56px; }
+  .drag-handle { cursor: grab; user-select: none; font-weight: 900; opacity: .8; }
+  .seed-item.dragging { opacity: .7; background: rgba(37,99,235,0.12); border-style: dashed; }
+  .seed-item.placeholder { outline: 2px dashed var(--accent); }
 </style>
 {% endblock %}
 {% block content %}
@@ -14,22 +17,77 @@
     <a class="button secondary" href="{{ url_for('admin_bracket') }}">Назад к сетке</a>
   </div>
 
-  <form class="form" action="{{ url_for('admin_bracket_seed_post') }}" method="post">
-    <p class="muted">Укажите порядок посева (1 — самый высокий). Можно вводить одинаковые значения — порядок будет по вводу.</p>
-    <div class="seed-list">
+  <form id="seedForm" class="form" action="{{ url_for('admin_bracket_seed_post') }}" method="post">
+    <p class="muted">Перетаскивайте участников для задания порядка посева (сверху — более высокий посев).</p>
+    <div class="seed-list" id="seedList">
       {% for it in items %}
-      <div class="seed-item">
+      <div class="seed-item" draggable="true" data-idx="{{ it.idx }}">
+        <div class="drag-handle" title="Перетащить" aria-hidden="true">≡</div>
         <img class="avatar" src="{{ url_for('static', filename='uploads/' ~ it.photo) }}" alt="">
         <div style="flex:1 1 auto;">{{ it.name }}</div>
-        <input class="seed-idx" type="number" name="idx" value="{{ it.idx }}" min="0" max="9999">
       </div>
       {% endfor %}
     </div>
+    <div id="hiddenInputs"></div>
     <div class="actions" style="margin-top:10px;">
       <button type="submit">Сохранить порядок</button>
       <a class="button secondary" href="{{ url_for('admin_bracket') }}">Отмена</a>
     </div>
   </form>
+  <script>
+    (function(){
+      var list = document.getElementById('seedList');
+      var form = document.getElementById('seedForm');
+      var dragEl = null;
+      list.addEventListener('dragstart', function(e){
+        var el = e.target.closest('.seed-item');
+        if (!el) return;
+        dragEl = el;
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        try { e.dataTransfer.setData('text/plain', 'drag'); } catch(_) {}
+      });
+      list.addEventListener('dragend', function(){
+        if (dragEl) dragEl.classList.remove('dragging');
+        dragEl = null;
+      });
+      list.addEventListener('dragover', function(e){
+        e.preventDefault();
+        var after = getAfterElement(list, e.clientY);
+        if (!dragEl) return;
+        if (after == null) {
+          list.appendChild(dragEl);
+        } else {
+          list.insertBefore(dragEl, after);
+        }
+      });
+      function getAfterElement(container, y){
+        var els = Array.prototype.slice.call(container.querySelectorAll('.seed-item:not(.dragging)'));
+        var closest = {offset: Number.NEGATIVE_INFINITY, element: null};
+        els.forEach(function(child){
+          var box = child.getBoundingClientRect();
+          var offset = y - box.top - box.height/2;
+          if (offset < 0 && offset > closest.offset) {
+            closest = {offset: offset, element: child};
+          }
+        });
+        return closest.element;
+      }
+      form.addEventListener('submit', function(){
+        var hidden = document.getElementById('hiddenInputs');
+        hidden.innerHTML = '';
+        var ordered = list.querySelectorAll('.seed-item');
+        ordered.forEach(function(el){
+          var idx = el.getAttribute('data-idx');
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'idx';
+          input.value = idx;
+          hidden.appendChild(input);
+        });
+      });
+    })();
+  </script>
 {% endblock %}
 
 

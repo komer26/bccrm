@@ -1,49 +1,5 @@
 {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  "generated_at": "2025-08-30T05:29:21",
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
-=======
-  "generated_at": "2025-08-30T05:28:17",
->>>>>>> Stashed changes
+  "generated_at": "2025-08-30T06:03:05",
   "participants": [
     {
       "id": 0,
@@ -142,593 +98,84 @@
       {
         "id": "r1m1",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 10
-        },
-        "p2_from": {
-          "seed": 6
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
->>>>>>> Stashed changes
-        },
-=======
-          "seed": 12
-        },
-        "p2_from": {
           "seed": 0
         },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
         "p2_from": {
-          "seed": 0
+          "seed": 5
         },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 12
-        },
-        "p2_from": {
-          "seed": 0
-        },
->>>>>>> Stashed changes
         "winner": 1,
         "table": 1
       },
       {
         "id": "r1m2",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 8
-        },
-        "p2_from": {
-          "seed": 3
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
->>>>>>> Stashed changes
-        },
-=======
-          "seed": 6
+          "seed": 11
         },
         "p2_from": {
           "seed": 10
         },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-=======
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
->>>>>>> Stashed changes
-        "winner": 1,
+        "winner": 2,
         "table": 2
       },
       {
         "id": "r1m3",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 2
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-=======
-          "seed": 1
->>>>>>> Stashed changes
-        },
-        "p2_from": {
           "seed": 4
         },
-        "winner": 1,
-        "table": 3
-      },
-      {
-        "id": "r1m4",
-        "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 0
-        },
         "p2_from": {
-          "seed": 4
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-=======
-          "seed": 5
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 2
->>>>>>> Stashed changes
-        },
-        "winner": 1,
-        "table": 1
-=======
           "seed": 12
         },
-        "p2_from": {
-          "seed": 0
-        },
-        "winner": 1,
-        "table": 1
-      },
-      {
-        "id": "r1m2",
-        "p1_from": {
-          "seed": 6
-        },
-        "p2_from": {
-          "seed": 10
-        },
-        "winner": 1,
-        "table": 2
->>>>>>> Stashed changes
-      },
-      {
-        "id": "r1m5",
-        "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 1
-        },
-        "p2_from": {
-          "seed": 5
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-=======
-          "seed": 11
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-=======
-          "seed": 1
-        },
-        "p2_from": {
-          "seed": 4
-        },
         "winner": 1,
         "table": 3
       },
       {
         "id": "r1m4",
         "p1_from": {
-          "seed": 5
+          "seed": 1
         },
         "p2_from": {
-          "seed": 2
+          "seed": 9
         },
-        "winner": null,
-        "table": 1
+        "winner": 2,
+        "table": 4
       },
       {
         "id": "r1m5",
         "p1_from": {
-          "seed": 11
+          "seed": 2
         },
         "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 7
->>>>>>> Stashed changes
+          "seed": 3
         },
         "winner": 1,
-        "table": 2
+        "table": 5
       },
       {
         "id": "r1m6",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
           "seed": 7
         },
         "p2_from": {
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
-=======
-          "seed": 9
+          "seed": 8
         },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "p2_from": {
-          "seed": 3
->>>>>>> Stashed changes
-        },
-        "winner": 1,
-        "table": 3
+        "winner": 2,
+        "table": 1
       },
       {
         "id": "r1m7",
         "p1_from": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "seed": 11
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
-=======
-          "seed": 8
->>>>>>> Stashed changes
+          "seed": 6
         },
         "p2_from": null,
-        "winner": null,
-        "table": 1
+        "winner": 1,
+        "table": 2
       },
       {
         "id": "r1m8",
         "p1_from": null,
         "p2_from": null,
         "winner": null,
-        "table": 2
+        "table": 3
       }
     ],
     [
@@ -742,7 +189,7 @@
           "winner_round": 0,
           "winner_match": 1
         },
-        "winner": null,
+        "winner": 1,
         "table": 1
       },
       {
@@ -755,7 +202,7 @@
           "winner_round": 0,
           "winner_match": 3
         },
-        "winner": null,
+        "winner": 1,
         "table": 2
       },
       {
@@ -768,7 +215,7 @@
           "winner_round": 0,
           "winner_match": 5
         },
-        "winner": null,
+        "winner": 1,
         "table": 3
       },
       {
@@ -782,7 +229,7 @@
           "winner_match": 7
         },
         "winner": null,
-        "table": 1
+        "table": 4
       }
     ],
     [
@@ -829,7 +276,7 @@
       }
     ]
   ],
-  "tables": 3,
+  "tables": 5,
   "bronze": {
     "id": "bronze",
     "p1_from": {
@@ -843,49 +290,5 @@
     "winner": null,
     "table": 1
   },
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-  "updated_at": "2025-08-30T05:30:01"
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
-=======
-  "updated_at": "2025-08-30T05:28:50"
->>>>>>> Stashed changes
+  "updated_at": "2025-08-30T06:03:57"
 }

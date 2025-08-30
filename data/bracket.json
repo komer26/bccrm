@@ -107,7 +107,7 @@
         "p2_from": {
           "seed": 3
         },
-        "winner": null,
+        "winner": 2,
         "table": 2
       },
       {
@@ -151,7 +151,7 @@
         "p2_from": {
           "seed": 4
         },
-        "winner": null,
+        "winner": 1,
         "table": 3
       },
       {
@@ -281,5 +281,5 @@
     "winner": null,
     "table": 1
   },
-  "updated_at": "2025-08-30T08:09:55"
+  "updated_at": "2025-08-30T10:02:46"
 }
